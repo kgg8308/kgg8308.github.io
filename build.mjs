@@ -4,7 +4,8 @@
 // 고칠 곳은 아래 CONFIG 뿐입니다. 고친 뒤 `node homepage/build.mjs` 또는
 // `홈페이지_새로고침.bat` 을 실행하면 다시 만들어집니다.
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -88,6 +89,9 @@ const CONFIG = {
 };
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+// 이미지 파일명에 해시가 붙으므로, 남은 옛 파일이 쌓이지 않게 매번 비운다.
+rmSync(join(dirname(fileURLToPath(import.meta.url)), 'assets'), { recursive: true, force: true });
 const POSTS_PER_BLOG = 6;
 
 /* ───────────────────────── 유틸 ───────────────────────── */
@@ -169,7 +173,10 @@ async function saveImage(url, name) {
     // 확장자는 실제 내용으로 판단한다 (네이버는 .PNG 경로로 JPEG 를 주기도 한다)
     const png = buf[0] === 0x89 && buf[1] === 0x50;
     const gif = buf[0] === 0x47 && buf[1] === 0x49;
-    const rel = `assets/${name}.${png ? 'png' : gif ? 'gif' : 'jpg'}`;
+    // 파일명에 내용 해시를 붙인다. 사진을 바꾸면 주소도 바뀌므로
+    // 방문자 브라우저가 옛 사진을 캐시해 두는 일이 없다.
+    const hash = createHash('sha1').update(buf).digest('hex').slice(0, 8);
+    const rel = `assets/${name}-${hash}.${png ? 'png' : gif ? 'gif' : 'jpg'}`;
     mkdirSync(join(HERE, 'assets'), { recursive: true });
     writeFileSync(join(HERE, rel), buf);
     return rel;
