@@ -60,7 +60,7 @@ const CONFIG = {
         title: '한우먹는날 한우 도가니탕 700g 3개',
         desc: '독립문 대성집 60년 노포의 그 맛을 집에서.',
         image:
-          'https://postfiles.pstatic.net/MjAyNjEwMTJfMjQw/MDAxNzkxNzkwMzYzMzAw.7RbDCXJVIGvapMOYXqFudgChGTAkSuWPxfqZii-V3XIg.d5AuCdTbqzl99DlKw0lr84feBXyMWy32a9_xTk3dwKUg.JPEG/SE-C531F8BA-F15F-471C-A572-A6225738EB0A.jpg',
+          'https://blogthumb.pstatic.net/MjAyNjEwMTJfMTc1/MDAxNzkxNzkwMjEzNDIx.SifMjSDl-vIXZTiAVeRYcVrFk-AqlgaUPb4GMvxyuTwg.KrBvFfB4qqZ0pDTkQgPvjd9ExRRfvfPhWQknR2KMA-sg.JPEG/IMG%A3%DF0767.jpg?type=s3',
         link: 'https://link.coupang.com/a/hMG5Hp9Njo',
         post: 'https://blog.naver.com/kgg8308/224439196444',
         badge: '맛집 밀키트',
