@@ -218,7 +218,6 @@ const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
 const metaDesc = plain(CONFIG.tagline).slice(0, 155);
 const ogImage = blogs.find((b) => b.items.find((i) => i.thumb))?.items.find((i) => i.thumb)?.thumb || '';
 
-const clientConfig = JSON.stringify(blogs.map((b) => ({ id: b.id, feedUrl: b.feedUrl })));
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -549,7 +548,6 @@ footer {
 }
 .foot-row { display: flex; gap: 10px 18px; flex-wrap: wrap; align-items: baseline; }
 .foot-row .dot { opacity: .5; }
-#sync-state { font-variant-numeric: tabular-nums; }
 
 @media (max-width: 860px) {
   .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -597,111 +595,12 @@ ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section clas
     <div class="foot-row">
       <span>최신글 기준 <strong>${esc(builtLabel)}</strong></span>
       <span class="dot">·</span>
-      <span id="sync-state">열 때마다 최신글을 다시 확인합니다</span>
+      <span>6시간마다 자동으로 새 글을 반영합니다</span>
     </div>
     <div class="foot-row"><span>${esc(CONFIG.coupang.disclosure)}</span></div>
   </footer>
 </div>
 
-<script>
-// 페이지를 열 때 각 블로그 RSS를 다시 읽어 최신글을 갱신합니다.
-// 네이버 RSS는 CORS 헤더를 주지 않으므로 공개 프록시를 차례로 시도하고,
-// 모두 실패하면 아무것도 바꾸지 않습니다 (구워둔 최신글이 그대로 보입니다).
-(function () {
-  var BLOGS = ${clientConfig};
-  var PROXIES = [
-    function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
-    function (u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); },
-    function (u) { return 'https://api.cors.lol/?url=' + encodeURIComponent(u); }
-  ];
-  var state = document.getElementById('sync-state');
-
-  function text(el, name) {
-    var n = el.getElementsByTagName(name)[0];
-    return n && n.textContent ? n.textContent.trim() : '';
-  }
-  function fmt(d) {
-    if (!d || isNaN(d)) return '';
-    var p = function (n) { return String(n).padStart(2, '0'); };
-    return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate());
-  }
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function render(items) {
-    return items.map(function (it) {
-      var meta = [it.category, fmt(it.date)].filter(Boolean).map(esc).join(' · ');
-      var thumb = it.thumb
-        ? '<span class="thumb"><img src="' + esc(it.thumb) + '" alt="" loading="lazy" decoding="async"></span>'
-        : '<span class="thumb thumb-empty" aria-hidden="true"></span>';
-      return '<li class="post"><a href="' + esc(it.link) + '" target="_blank" rel="noopener">' + thumb +
-        '<span class="post-body"><span class="post-title">' + esc(it.title) +
-        '</span><span class="post-meta">' + meta + '</span></span></a></li>';
-    }).join('');
-  }
-
-  function fetchFeed(url) {
-    var i = 0;
-    function attempt() {
-      if (i >= PROXIES.length) return Promise.reject(new Error('all proxies failed'));
-      var target = PROXIES[i++](url);
-      var ctrl = new AbortController();
-      var timer = setTimeout(function () { ctrl.abort(); }, 9000);
-      return fetch(target, { signal: ctrl.signal })
-        .then(function (r) {
-          clearTimeout(timer);
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.text();
-        })
-        .then(function (body) {
-          var doc = new DOMParser().parseFromString(body, 'text/xml');
-          var nodes = doc.getElementsByTagName('item');
-          if (!nodes.length) throw new Error('no items');
-          var out = [];
-          for (var n = 0; n < nodes.length && out.length < ${POSTS_PER_BLOG}; n++) {
-            var desc = text(nodes[n], 'description');
-            var img = desc.match(/<img[^>]+src="([^"]+)"/);
-            out.push({
-              title: text(nodes[n], 'title'),
-              link: text(nodes[n], 'link').split('?')[0],
-              category: text(nodes[n], 'category'),
-              date: new Date(text(nodes[n], 'pubDate')),
-              thumb: img ? img[1] : ''
-            });
-          }
-          return out;
-        })
-        .catch(function () { clearTimeout(timer); return attempt(); });
-    }
-    return attempt();
-  }
-
-  var done = 0;
-  var fresh = 0;
-  BLOGS.forEach(function (blog) {
-    var panel = document.querySelector('[data-blog="' + blog.id + '"]');
-    if (!panel) return;
-    fetchFeed(blog.feedUrl).then(function (items) {
-      var list = panel.querySelector('.posts');
-      if (list && items.length) {
-        list.innerHTML = render(items);
-        var note = panel.querySelector('.empty');
-        if (note) note.remove();
-        var fr = panel.querySelector('.freshness');
-        if (fr) fr.textContent = '최근 글 ' + fmt(items[0].date);
-        fresh++;
-      }
-    }).catch(function () {}).then(function () {
-      if (++done === BLOGS.length && state) {
-        state.textContent = fresh
-          ? '방금 블로그 ' + fresh + '곳 최신글 갱신'
-          : '지금은 갱신 불가 — 저장된 최신글을 보여줍니다';
-      }
-    });
-  });
-})();
-</script>
 </body>
 </html>
 `;
