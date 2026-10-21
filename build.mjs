@@ -23,33 +23,36 @@ const CONFIG = {
   coupang: {
     // 파트너스 필수 고지 문구. 지우지 마세요.
     disclosure: '이 사이트는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
-    // 추천 상품. link 가 비어 있는 상품은 페이지에 나오지 않습니다.
-    // 쿠팡 파트너스에서 만든 링크를 각 상품의 link 에 붙여넣으세요.
+    // 추천 상품.
+    // link  = 쿠팡 파트너스 링크. 유인양품 글에 걸려 있던 링크를 그대로 가져왔다.
+    //         (글에서는 네이버 단축주소 vvd.bz 로 감싸여 있어 원본을 풀어 적었다)
+    // post  = 그 제품을 다룬 리뷰 글. link 가 비면 이쪽으로 연결된다.
+    // 둘 다 비어 있는 상품은 페이지에 나오지 않는다.
     picks: [
       {
-        title: '레노버 라이젠7 게이밍 노트북',
+        title: '레노버 LOQ 15AHP11 라이젠7 RTX 5060',
         desc: '원룸·좁은 책상이면 데스크톱보다 이쪽. 직접 비교해 본 결론.',
         image:
           'https://blogthumb.pstatic.net/MjAyNjEwMjBfMzYg/MDAxNzkyNDYwODk3NDcz.LVOP7mri7JagnI0dd_Szy-9-dklrJn7mwSFQvLsfA3wg.mxXfnQJIPcIGTSLIEpfvvn7-D43lptD1yLSY4S8FjAkg.PNG/img_01.png?type=s3',
-        link: '',
+        link: 'https://link.coupang.com/a/hZy6y0iCXY',
         post: 'https://blog.naver.com/sexpo15/224447508927',
-        badge: '노트북',
+        badge: '게이밍 노트북',
       },
       {
-        title: '브룩스 알렉스 조노',
-        desc: '내돈내산으로 신고 달려본 트레일 러닝화.',
+        title: '플레이스테이션 5 프로',
+        desc: '귀무자 웨이 오브 더 소드 돌려보고 내린 결론 — 살 만하다.',
         image:
-          'https://blogthumb.pstatic.net/MjAyNjA5MjhfMzIg/MDAxNzkwNTgwNjAwNzc2.fTmDAc0Xzo8cWsOqkjXYYWej0GN70VE9v8bp4tsBg_sg.oohgAS4Rur6ALXMNh4rlJkYlCoRQMupwbRuiMSawGpkg.JPEG/IMG%A3%DF9225.jpg?type=s3',
-        link: '',
-        post: 'https://blog.naver.com/sexpo15/224424954013',
-        badge: '러닝화',
+          'https://blogthumb.pstatic.net/MjAyNjA5MDZfMjQ3/MDAxNzg4Njc5ODc5NDA5.6PHRQhApMTE4GZou9SzLr3fhWSvJ--WlmX_k-53kPYMg.xEp0StltGpHpEM5Pm0UlK26uWN5kLtbCRNQaNg-jf7cg.PNG/image.png?type=s3',
+        link: 'https://link.coupang.com/a/gOVTdFVQJg',
+        post: 'https://blog.naver.com/sexpo15/224402711685',
+        badge: '콘솔',
       },
       {
-        title: '세이코 터틀',
+        title: '세이코 SRPE93J1 프로스펙스 터틀',
         desc: '오래 차봐도 만족스러운 다이버 워치.',
         image:
           'https://blogthumb.pstatic.net/MjAyNjA5MjdfMTk3/MDAxNzkwNDkxMjkyODAw.N1Ge-_zN_p-emgesKR9shX51IvVcsye0t4imITSsHuMg.1LbhNCZcir0kl5lMCi6qNmd2SifkD3MNYbMbKRs3KGwg.PNG/image.png?type=s3',
-        link: '',
+        link: 'https://link.coupang.com/a/hnIMTWiTWm',
         post: 'https://blog.naver.com/sexpo15/224423876618',
         badge: '시계',
       },
