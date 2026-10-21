@@ -90,6 +90,10 @@ const pick = (xml, name) => {
 
 const cleanLink = (url) => url.split('?')[0];
 
+// 네이버가 주는 이미지 주소에 http:// 가 섞여 있다. https 사이트에서는
+// 혼합 콘텐츠로 차단되므로 전부 https 로 올려준다.
+const https = (url) => String(url ?? '').replace(/^http:\/\//, 'https://');
+
 const plain = (html) =>
   cdata(html)
     .replace(/<[^>]*>/g, ' ')
@@ -122,7 +126,7 @@ function parseFeed(xml) {
         category: pick(raw, 'category'),
         date: isNaN(date) ? null : date,
         // 네이버 썸네일은 RSS가 준 ?type=s3 만 유효합니다. 크기를 바꾸면 404.
-        thumb: img ? img[1] : '',
+        thumb: img ? https(img[1]) : '',
         snippet: plain(desc).slice(0, 120),
       };
     })
@@ -131,7 +135,7 @@ function parseFeed(xml) {
   return {
     name: pick(head, 'title'),
     description: pick(head, 'description'),
-    avatar: pick(pick(head, 'image'), 'url'),
+    avatar: https(pick(pick(head, 'image'), 'url')),
     items,
   };
 }
