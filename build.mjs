@@ -583,7 +583,7 @@ footer {
   <div class="topbar-inner">
     <a class="brand" href="#top">${esc(CONFIG.siteTitle)}</a>
     <nav class="topnav">
-      <a href="#picks">추천</a>
+      ${livePicks.length ? '<a href="#picks">추천</a>' : ''}
 ${blogs.map((b) => `      <a href="#${esc(b.id)}">${esc(b.kicker)}</a>`).join('\n')}
     </nav>
   </div>
@@ -600,7 +600,7 @@ ${blogs.map((b) => `      <a class="btn" href="#${esc(b.id)}" style="--c:${esc(b
   </header>
 
   <main>
-${picksSection(livePicks)}
+${livePicks.length ? picksSection(livePicks) : ""}
 
     <div class="blogs">
 ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section class="panel" id="${esc(b.id)}"`)).join('\n')}
@@ -651,6 +651,6 @@ if (siteUrl) {
 for (const b of blogs) {
   console.log(b.ok ? `OK   ${b.name} — 글 ${b.items.length}개` : `실패 ${b.id} — ${b.note}`);
 }
-console.log(`추천 상품 ${livePicks.length}개 노출 (링크 없는 상품 ${CONFIG.coupang.picks.length - livePicks.length}개는 숨김)`);
+console.log(livePicks.length ? `추천 상품 ${livePicks.length}개 노출` : `추천 섹션 숨김 — 링크가 채워진 상품이 없습니다 (대기 ${CONFIG.coupang.picks.length}개)`);
 console.log(siteUrl ? `sitemap.xml / robots.txt 생성 (${siteUrl})` : 'siteUrl 비어 있음 → sitemap.xml / robots.txt 생략');
 console.log(`만들었습니다: ${out}`);
