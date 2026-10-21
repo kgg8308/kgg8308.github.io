@@ -146,19 +146,23 @@ function parseFeed(xml) {
   };
 }
 
-// 프로필 이미지가 올라오는 blogpfthumb.phinf.naver.net 은 https 를 지원하지
-// 않아(443 연결 거부) https 사이트에서 직접 불러올 수 없다. 빌드할 때 받아서
-// 사이트에 같이 올린다. 실패하면 빈 값 → 회색 원으로 표시된다.
-async function saveAvatar(id, url) {
+// 네이버 이미지 서버는 두 가지로 발목을 잡는다.
+//   - 프로필(blogpfthumb.phinf.naver.net): https 를 아예 지원하지 않는다(443 거부)
+//   - 썸네일(blogthumb.pstatic.net): 일부 이미지는 외부 사이트에서 부르면 차단된다
+// 그래서 꼭 보여야 하는 이미지는 빌드할 때 받아서 사이트에 같이 올린다.
+// 실패하면 빈 값을 돌려주고, 페이지는 이미지 없이 그려진다.
+async function saveImage(url, name) {
   if (!url) return '';
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const type = res.headers.get('content-type') || '';
-    const ext = type.includes('png') ? 'png' : type.includes('gif') ? 'gif' : 'jpg';
-    const rel = `assets/${id}-profile.${ext}`;
+    const buf = Buffer.from(await res.arrayBuffer());
+    // 확장자는 실제 내용으로 판단한다 (네이버는 .PNG 경로로 JPEG 를 주기도 한다)
+    const png = buf[0] === 0x89 && buf[1] === 0x50;
+    const gif = buf[0] === 0x47 && buf[1] === 0x49;
+    const rel = `assets/${name}.${png ? 'png' : gif ? 'gif' : 'jpg'}`;
     mkdirSync(join(HERE, 'assets'), { recursive: true });
-    writeFileSync(join(HERE, rel), Buffer.from(await res.arrayBuffer()));
+    writeFileSync(join(HERE, rel), buf);
     return rel;
   } catch {
     return '';
@@ -173,7 +177,7 @@ async function loadBlog(blog) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const feed = parseFeed(await res.text());
     if (!feed.name) return { ...base, note: '이 주소에서 블로그를 찾지 못했습니다' };
-    const avatar = await saveAvatar(blog.id, feed.avatar);
+    const avatar = await saveImage(feed.avatar, `${blog.id}-profile`);
     return { ...base, ...feed, avatar, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
   } catch (err) {
     return { ...base, note: `불러오지 못했습니다 (${err.message})` };
@@ -255,6 +259,11 @@ const allPosts = blogs
 
 // 파트너스 링크가 아직 없어도 리뷰 글이 있으면 카드로 보여준다.
 const livePicks = CONFIG.coupang.picks.filter((p) => (p.link || p.post || '').trim());
+
+// 수익이 걸린 카드라 이미지는 네이버가 아니라 우리 사이트에서 서빙한다.
+for (const [i, p] of livePicks.entries()) {
+  p.image = (await saveImage(p.image, `pick-${i + 1}`)) || p.image;
+}
 const builtAt = new Date();
 
 const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
