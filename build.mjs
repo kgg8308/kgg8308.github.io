@@ -4,7 +4,7 @@
 // 고칠 곳은 아래 CONFIG 뿐입니다. 고친 뒤 `node homepage/build.mjs` 또는
 // `홈페이지_새로고침.bat` 을 실행하면 다시 만들어집니다.
 
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -135,9 +135,28 @@ function parseFeed(xml) {
   return {
     name: pick(head, 'title'),
     description: pick(head, 'description'),
-    avatar: https(pick(pick(head, 'image'), 'url')),
+    avatar: pick(pick(head, 'image'), 'url'),
     items,
   };
+}
+
+// 프로필 이미지가 올라오는 blogpfthumb.phinf.naver.net 은 https 를 지원하지
+// 않아(443 연결 거부) https 사이트에서 직접 불러올 수 없다. 빌드할 때 받아서
+// 사이트에 같이 올린다. 실패하면 빈 값 → 회색 원으로 표시된다.
+async function saveAvatar(id, url) {
+  if (!url) return '';
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const type = res.headers.get('content-type') || '';
+    const ext = type.includes('png') ? 'png' : type.includes('gif') ? 'gif' : 'jpg';
+    const rel = `assets/${id}-profile.${ext}`;
+    mkdirSync(join(HERE, 'assets'), { recursive: true });
+    writeFileSync(join(HERE, rel), Buffer.from(await res.arrayBuffer()));
+    return rel;
+  } catch {
+    return '';
+  }
 }
 
 async function loadBlog(blog) {
@@ -148,7 +167,8 @@ async function loadBlog(blog) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const feed = parseFeed(await res.text());
     if (!feed.name) return { ...base, note: '이 주소에서 블로그를 찾지 못했습니다' };
-    return { ...base, ...feed, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
+    const avatar = await saveAvatar(blog.id, feed.avatar);
+    return { ...base, ...feed, avatar, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
   } catch (err) {
     return { ...base, note: `불러오지 못했습니다 (${err.message})` };
   }
