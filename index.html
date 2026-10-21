@@ -144,9 +144,9 @@ a { color: inherit; text-decoration: none; }
   transition: transform .15s ease;
 }
 .pick a:hover { transform: translateY(-2px); }
-.pick-img { display: block; aspect-ratio: 4 / 3; background: var(--bg); }
+.pick-img { display: block; flex: none; aspect-ratio: 4 / 3; background: var(--bg); overflow: hidden; }
 .pick-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.pick-body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; }
+.pick-body { display: flex; flex: 1 1 auto; flex-direction: column; gap: 7px; padding: 16px 16px 18px; }
 .pick-badge {
   align-self: start;
   font-size: 11px;
@@ -350,16 +350,7 @@ footer {
         </div>
         <div class="picks-empty">
           <p><strong>추천 상품 자리입니다.</strong></p>
-          <p>쿠팡 파트너스에서 만든 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
-          <pre>picks: [
-  {
-    title: '상품 이름',
-    desc: '한 줄 설명',
-    image: '상품 이미지 주소',
-    link: '쿠팡 파트너스 링크',
-    badge: '테슬라 액세서리'
-  },
-]</pre>
+          <p>쿠팡 파트너스 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 안 각 상품의 <code>link</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
         </div>
       </section>
 

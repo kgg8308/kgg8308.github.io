@@ -23,9 +23,34 @@ const CONFIG = {
   coupang: {
     // 파트너스 필수 고지 문구. 지우지 마세요.
     disclosure: '이 사이트는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
-    // 추천 상품. 파트너스에서 만든 링크를 그대로 넣으면 됩니다.
-    // { title, desc, image, link, badge } 형태로 원하는 만큼 추가하세요.
-    picks: [],
+    // 추천 상품. link 가 비어 있는 상품은 페이지에 나오지 않습니다.
+    // 쿠팡 파트너스에서 만든 링크를 각 상품의 link 에 붙여넣으세요.
+    picks: [
+      {
+        title: '레노버 라이젠7 게이밍 노트북',
+        desc: '원룸·좁은 책상이면 데스크톱보다 이쪽. 직접 비교해 본 결론.',
+        image:
+          'https://blogthumb.pstatic.net/MjAyNjEwMjBfMzYg/MDAxNzkyNDYwODk3NDcz.LVOP7mri7JagnI0dd_Szy-9-dklrJn7mwSFQvLsfA3wg.mxXfnQJIPcIGTSLIEpfvvn7-D43lptD1yLSY4S8FjAkg.PNG/img_01.png?type=s3',
+        link: '',
+        badge: '노트북',
+      },
+      {
+        title: '브룩스 알렉스 조노',
+        desc: '내돈내산으로 신고 달려본 트레일 러닝화.',
+        image:
+          'https://blogthumb.pstatic.net/MjAyNjA5MjhfMzIg/MDAxNzkwNTgwNjAwNzc2.fTmDAc0Xzo8cWsOqkjXYYWej0GN70VE9v8bp4tsBg_sg.oohgAS4Rur6ALXMNh4rlJkYlCoRQMupwbRuiMSawGpkg.JPEG/IMG%A3%DF9225.jpg?type=s3',
+        link: '',
+        badge: '러닝화',
+      },
+      {
+        title: '세이코 터틀',
+        desc: '오래 차봐도 만족스러운 다이버 워치.',
+        image:
+          'https://blogthumb.pstatic.net/MjAyNjA5MjdfMTk3/MDAxNzkwNDkxMjkyODAw.N1Ge-_zN_p-emgesKR9shX51IvVcsye0t4imITSsHuMg.1LbhNCZcir0kl5lMCi6qNmd2SifkD3MNYbMbKRs3KGwg.PNG/image.png?type=s3',
+        link: '',
+        badge: '시계',
+      },
+    ],
   },
 
   // ── 블로그 ────────────────────────────────────────────────────
@@ -189,16 +214,7 @@ const picksSection = (picks) => `
         <p class="disclosure">${esc(CONFIG.coupang.disclosure)}</p>`
           : `<div class="picks-empty">
           <p><strong>추천 상품 자리입니다.</strong></p>
-          <p>쿠팡 파트너스에서 만든 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
-          <pre>picks: [
-  {
-    title: '상품 이름',
-    desc: '한 줄 설명',
-    image: '상품 이미지 주소',
-    link: '쿠팡 파트너스 링크',
-    badge: '테슬라 액세서리'
-  },
-]</pre>
+          <p>쿠팡 파트너스 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 안 각 상품의 <code>link</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
         </div>`}
       </section>`;
 
@@ -211,6 +227,7 @@ const allPosts = blogs
   .flatMap((b) => b.items.map((it) => ({ ...it, blog: b.name || b.id })))
   .sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
 
+const livePicks = CONFIG.coupang.picks.filter((p) => p.link && p.link.trim());
 const builtAt = new Date();
 
 const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
@@ -387,9 +404,9 @@ a { color: inherit; text-decoration: none; }
   transition: transform .15s ease;
 }
 .pick a:hover { transform: translateY(-2px); }
-.pick-img { display: block; aspect-ratio: 4 / 3; background: var(--bg); }
+.pick-img { display: block; flex: none; aspect-ratio: 4 / 3; background: var(--bg); overflow: hidden; }
 .pick-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.pick-body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; }
+.pick-body { display: flex; flex: 1 1 auto; flex-direction: column; gap: 7px; padding: 16px 16px 18px; }
 .pick-badge {
   align-self: start;
   font-size: 11px;
@@ -583,7 +600,7 @@ ${blogs.map((b) => `      <a class="btn" href="#${esc(b.id)}" style="--c:${esc(b
   </header>
 
   <main>
-${picksSection(CONFIG.coupang.picks)}
+${picksSection(livePicks)}
 
     <div class="blogs">
 ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section class="panel" id="${esc(b.id)}"`)).join('\n')}
@@ -634,6 +651,6 @@ if (siteUrl) {
 for (const b of blogs) {
   console.log(b.ok ? `OK   ${b.name} — 글 ${b.items.length}개` : `실패 ${b.id} — ${b.note}`);
 }
-console.log(`추천 상품 ${CONFIG.coupang.picks.length}개`);
+console.log(`추천 상품 ${livePicks.length}개 노출 (링크 없는 상품 ${CONFIG.coupang.picks.length - livePicks.length}개는 숨김)`);
 console.log(siteUrl ? `sitemap.xml / robots.txt 생성 (${siteUrl})` : 'siteUrl 비어 있음 → sitemap.xml / robots.txt 생략');
 console.log(`만들었습니다: ${out}`);
