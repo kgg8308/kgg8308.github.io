@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>잘 먹고 잘 사는 법 — 맛집 리뷰와 디지털 리뷰를 한곳에</title>
+<meta name="description" content="맛집은 맛집! 쇼핑! King, 디지털·테슬라는 유인양품. 직접 가보고 직접 써본 리뷰만 모았습니다.">
+<link rel="canonical" href="https://kgg8308.github.io/">
+
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="잘 먹고 잘 사는 법">
+<meta property="og:title" content="잘 먹고 잘 사는 법">
+<meta property="og:description" content="맛집은 맛집! 쇼핑! King, 디지털·테슬라는 유인양품. 직접 가보고 직접 써본 리뷰만 모았습니다.">
+<meta property="og:url" content="https://kgg8308.github.io/">
+<meta property="og:image" content="https://blogthumb.pstatic.net/MjAyNjEwMTlfNzMg/MDAxNzkyMzg3MzU0Nzk2.KJg-8XZmvfyJ-xAOmlJBDcx4G-fcDmuK43YNgKz81VQg.chcIm5_KPsQqxoSr3MngJLJ5sGzkgkMUn9rpjewZANAg.JPEG/IMG%A3%DF0456.jpg?type=s3">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f4f3f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://blogthumb.pstatic.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f3f1;
+  --surface: #ffffff;
+  --ink: #17191c;
+  --muted: #6b7280;
+  --faint: #9aa0a8;
+  --line: #e4e2de;
+  --shadow: 0 1px 2px rgba(23, 25, 28, .05), 0 12px 28px -18px rgba(23, 25, 28, .25);
+  --coupang: #ae0000;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #121315;
+    --surface: #1b1d20;
+    --ink: #ecedef;
+    --muted: #9ca3ac;
+    --faint: #767c85;
+    --line: #2b2e33;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 30px -20px rgba(0, 0, 0, .8);
+    --coupang: #ff6b6b;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.6 'Pretendard Variable', Pretendard, -apple-system, 'Malgun Gothic', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+img { max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* 헤더 */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 13px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand { font-weight: 800; letter-spacing: -0.03em; font-size: 15.5px; }
+.topnav { margin-left: auto; display: flex; gap: 18px; font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.topnav a:hover { color: var(--ink); }
+
+/* 히어로 */
+.hero { padding: 64px 0 44px; }
+.eyebrow {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.hero h1 {
+  margin: 0;
+  font-size: clamp(32px, 6.4vw, 54px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.hero .tagline {
+  margin: 18px 0 0;
+  max-width: 48ch;
+  font-size: 16.5px;
+  color: var(--muted);
+}
+.hero-cta { margin: 28px 0 0; display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+
+/* 섹션 공통 */
+.section-head { margin: 0 0 20px; }
+.section-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.section-head p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+
+/* 추천 */
+.picks-wrap { padding: 18px 0 10px; }
+.picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pick a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease;
+}
+.pick a:hover { transform: translateY(-2px); }
+.pick-img { display: block; aspect-ratio: 4 / 3; background: var(--bg); }
+.pick-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pick-body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; }
+.pick-badge {
+  align-self: start;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--muted);
+}
+.pick-title { font-size: 15px; font-weight: 700; line-height: 1.4; }
+.pick-desc { font-size: 13px; color: var(--muted); }
+.pick-cta { margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--coupang); }
+.picks-empty {
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  padding: 22px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.picks-empty p { margin: 0 0 10px; }
+.picks-empty code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12.5px;
+  background: var(--bg);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.picks-empty pre {
+  margin: 12px 0 0;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: 10px;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-x: auto;
+}
+.disclosure {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+/* 블로그 패널 */
+.blogs { margin-top: 56px; display: grid; gap: 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 26px 24px 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--accent);
+}
+.panel-head { display: flex; gap: 14px; align-items: flex-start; }
+.avatar {
+  width: 52px; height: 52px; flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.avatar-empty { display: block; }
+.panel-title { min-width: 0; }
+.kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--accent);
+}
+.panel-title h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+.focus { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.blurb { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
+.panel-bar {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.freshness {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.visit { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--ink); }
+.visit span { display: inline-block; transition: transform .15s ease; }
+.visit:hover span { transform: translateX(3px); }
+.posts { list-style: none; margin: 4px 0 0; padding: 0; }
+.post + .post { border-top: 1px solid var(--line); }
+.post a {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 13px 0;
+  border-radius: 10px;
+  transition: background .15s ease, transform .15s ease;
+}
+.post a:hover { background: var(--bg); transform: translateX(2px); }
+.thumb {
+  width: 68px; height: 68px; flex: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.post-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-meta { font-size: 12px; color: var(--faint); }
+.empty {
+  margin: 18px 0 0;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.empty-sub { color: var(--faint); font-size: 12px; }
+
+/* 푸터 */
+footer {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--faint);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.foot-row { display: flex; gap: 10px 18px; flex-wrap: wrap; align-items: baseline; }
+.foot-row .dot { opacity: .5; }
+#sync-state { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) {
+  .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blogs { grid-template-columns: 1fr; margin-top: 44px; }
+  .hero { padding: 44px 0 32px; }
+}
+@media (max-width: 560px) {
+  .picks { grid-template-columns: 1fr; }
+  .topnav { display: none; }
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"잘 먹고 잘 사는 법","description":"맛집은 맛집! 쇼핑! King, 디지털·테슬라는 유인양품. 직접 가보고 직접 써본 리뷰만 모았습니다.","url":"https://kgg8308.github.io/","inLanguage":"ko-KR"},{"@type":"ItemList","name":"잘 먹고 잘 사는 법 최신 리뷰","itemListElement":[{"@type":"ListItem","position":1,"url":"https://blog.naver.com/sexpo15/224447508927","name":"노트북 vs 데스크톱 게이밍 PC, 원룸·좁은 공간이라면 뭘 사야 할까. 라이젠7 레노버"},{"@type":"ListItem","position":2,"url":"https://blog.naver.com/kgg8308/224446591897","name":"한강나들이, 서울역 만리재길 맛집 유즈라멘 본점"},{"@type":"ListItem","position":3,"url":"https://blog.naver.com/kgg8308/224446540607","name":"내돈내산 인생 돼지국밥을 만났다. 거대 돼지국밥 해운대"},{"@type":"ListItem","position":4,"url":"https://blog.naver.com/sexpo15/224444173749","name":"네스클 롯데부산본점 팝업"},{"@type":"ListItem","position":5,"url":"https://blog.naver.com/kgg8308/224444169558","name":"롯데백화점 부산본점 네스클·데카트론 팝업 다녀왔어요… 부산 리미티드 50%, 이월 2만원대, 데카트론 부산 한정 티셔츠까지"},{"@type":"ListItem","position":6,"url":"https://blog.naver.com/sexpo15/224444161244","name":"금주의 롯데몰동부산 및 롯데아울렛동부산 행사 골프 마크론나 말본 등"},{"@type":"ListItem","position":7,"url":"https://blog.naver.com/kgg8308/224442508067","name":"롯데몰 동부산 골프웨어 80% 할인｜말본골프·마크앤로나·헤지스 이벤트홀 핫딜 (10/15~10/21)"},{"@type":"ListItem","position":8,"url":"https://blog.naver.com/kgg8308/224442532193","name":"아이폰 듀오 사전예약 D-1, 내일 밤 9시 오픈! 장단점 솔직 총정리 (가격·스펙·구매 팁)"},{"@type":"ListItem","position":9,"url":"https://blog.naver.com/kgg8308/224441505290","name":"러너의 성지 카페 라이다, 라이다 플래그십 스토어 서빙고"},{"@type":"ListItem","position":10,"url":"https://blog.naver.com/sexpo15/224441559005","name":"아이폰 듀오 사전예약 D-2, 금요일 밤 9시에 알람 안 맞추면 진짜 후회합니다"},{"@type":"ListItem","position":11,"url":"https://blog.naver.com/sexpo15/224437908605","name":"더현대 서울 일요일 코스｜한정선 오픈런 → 이쿠라 → 에비스 팝업 마지막 날"},{"@type":"ListItem","position":12,"url":"https://blog.naver.com/sexpo15/224436801260","name":"10월 둘째 주 백화점·아울렛·스타필드 행사 총정리 (10/10~10/18)"}]}]}</script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top">잘 먹고 잘 사는 법</a>
+    <nav class="topnav">
+      <a href="#picks">추천</a>
+      <a href="#kgg8308">먹는 이야기</a>
+      <a href="#sexpo15">쓰는 이야기</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap" id="top">
+  <header class="hero">
+    <p class="eyebrow">Review Hub</p>
+    <h1>잘 먹고 잘 사는 법</h1>
+    <p class="tagline">맛집은 맛집! 쇼핑! King, 디지털·테슬라는 유인양품. 직접 가보고 직접 써본 리뷰만 모았습니다.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#kgg8308" style="--c:#e4572e"><span class="dot"></span>맛집 리뷰 보기</a>
+      <a class="btn" href="#sexpo15" style="--c:#2f6df6"><span class="dot"></span>디지털 리뷰 보기</a>
+    </div>
+  </header>
+
+  <main>
+
+      <section class="picks-wrap" id="picks">
+        <div class="section-head">
+          <h2>이 달의 추천</h2>
+          <p>리뷰하면서 실제로 쓰고 있는 물건만 올립니다.</p>
+        </div>
+        <div class="picks-empty">
+          <p><strong>추천 상품 자리입니다.</strong></p>
+          <p>쿠팡 파트너스에서 만든 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
+          <pre>picks: [
+  {
+    title: '상품 이름',
+    desc: '한 줄 설명',
+    image: '상품 이미지 주소',
+    link: '쿠팡 파트너스 링크',
+    badge: '테슬라 액세서리'
+  },
+]</pre>
+        </div>
+      </section>
+
+    <div class="blogs">
+
+      <section class="panel" id="kgg8308" style="--accent:#e4572e" data-blog="kgg8308">
+        <header class="panel-head">
+          <img class="avatar" src="http://blogpfthumb.phinf.naver.net/MjAyMDAzMTNfMTEx/MDAxNTg0MTA1ODQ1NTc0.eQf5LjH7o1uTABv3UHic5DLBqsJMHm4DkDYiqUZQ7n8g.k4MpDeMpc-chrib4oCQoCBEWsJLHsZe7jPNEm6uHPHgg.PNG.kgg8308/profileImage.png?type=m2" alt="" loading="lazy" decoding="async">
+          <div class="panel-title">
+            <p class="kicker">먹는 이야기</p>
+            <h2>맛집! 쇼핑! King</h2>
+            <p class="focus">맛집 · 카페 · 핫플레이스</p>
+          </div>
+        </header>
+        <p class="blurb">서울·부산 가리지 않고 직접 가서 먹고 씁니다. 백화점 팝업과 쇼핑 소식까지.</p>
+        <div class="panel-bar">
+          <span class="freshness">최근 글 2026.10.20</span>
+          <a class="visit" href="https://blog.naver.com/kgg8308" target="_blank" rel="noopener">블로그 전체 보기 <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <ol class="posts">
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224446591897" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTlfNzMg/MDAxNzkyMzg3MzU0Nzk2.KJg-8XZmvfyJ-xAOmlJBDcx4G-fcDmuK43YNgKz81VQg.chcIm5_KPsQqxoSr3MngJLJ5sGzkgkMUn9rpjewZANAg.JPEG/IMG%A3%DF0456.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">한강나들이, 서울역 만리재길 맛집 유즈라멘 본점</span>
+                <span class="post-meta">맛집,카페 (서울경기) · 2026.10.20</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224446540607" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTlfMTA1/MDAxNzkyMzg2MDYyNzAx.OxpdmExS3JMNwJpGWeGUAF2RwkXJ6pgN1L4y5m2uo-og.tavhFVDzwQ3ltQy7eH9GJGj28-LBaozeaKIaO0v65ekg.JPEG/IMG%A3%DF1116.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">내돈내산 인생 돼지국밥을 만났다. 거대 돼지국밥 해운대</span>
+                <span class="post-meta">부산맛집(해운대이외) · 2026.10.19</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224444169558" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTZfMjQ1/MDAxNzkyMTU3Nzk3NzM3._mI8LoAJGrTT-VWZyRouoFmPDLS8TLNQw8SHPnZ_Q8Ug.SxWWvBxiJqOmNkNtYDnOpiQd7UhyyqFsj7-OK1t4CLQg.JPEG/IMG%A3%DF1060.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">롯데백화점 부산본점 네스클·데카트론 팝업 다녀왔어요… 부산 리미티드 50%, 이월 2만원대, 데카트론 부산 한정 티셔츠까지</span>
+                <span class="post-meta">백화점, 아울렛 팝업 등 · 2026.10.16</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224442508067" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTVfMjc3/MDAxNzkyMDM4NDI5OTU3.4ytbx1xzqiv09RZ9z0OclKCwbT7KBdZ1gZms6iQoG8Eg.LtBI3ZmJFjL_Z5qfKDXx2IMlUFDkmt2CuZg88fy-4Dog.JPEG/IMG%A3%DF1005.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">롯데몰 동부산 골프웨어 80% 할인｜말본골프·마크앤로나·헤지스 이벤트홀 핫딜 (10/15~10/21)</span>
+                <span class="post-meta">백화점, 아울렛 팝업 등 · 2026.10.15</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224442532193" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTVfMTM5/MDAxNzkyMDQwMTM1NDI0.OYvz_9peTdcuTM7kmRjMTTHs-B6sbp5As2qoGeL841Ug.ewsL7evLB5WU4R9tvDb5hVanS_6AOBkKs__wT4rv65Eg.PNG/image.png?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">아이폰 듀오 사전예약 D-1, 내일 밤 9시 오픈! 장단점 솔직 총정리 (가격·스펙·구매 팁)</span>
+                <span class="post-meta">PC,모니터, 디지털 등 · 2026.10.15</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/kgg8308/224441505290" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTRfNjgg/MDAxNzkxOTYwMjY3NjEy.6SS6Locbe_HTiCnL78eHkspzzooIX6DXzfUAAM8BrpAg.5dNY2ncXhCo6Hk73gUOgAWVEJQ7TvL7NKwb3K-7nuYgg.JPEG/IMG%A3%DF0644.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">러너의 성지 카페 라이다, 라이다 플래그십 스토어 서빙고</span>
+                <span class="post-meta">러닝HOT · 2026.10.15</span>
+              </span>
+            </a>
+          </li></ol>
+        
+      </section>
+
+      <section class="panel" id="sexpo15" style="--accent:#2f6df6" data-blog="sexpo15">
+        <header class="panel-head">
+          <img class="avatar" src="http://blogpfthumb.phinf.naver.net/MjAyNTA0MDlfMTg0/MDAxNzQ0MTg5NjQ1MTU3.TGKDXDIMXRs0SyRMxZJGbSKbKT1luxXAuewBdfdkVb8g.6lcBIELzEvrqKw5gtC1ObE6gdxLX3lbWe73SfdLLFpIg.PNG/profileImage.png?type=m2" alt="" loading="lazy" decoding="async">
+          <div class="panel-title">
+            <p class="kicker">쓰는 이야기</p>
+            <h2>유인양품</h2>
+            <p class="focus">디지털 · 가전 · 테슬라</p>
+          </div>
+        </header>
+        <p class="blurb">노트북부터 테슬라까지, 돈 주고 산 물건을 오래 써보고 남기는 리뷰.</p>
+        <div class="panel-bar">
+          <span class="freshness">최근 글 2026.10.20</span>
+          <a class="visit" href="https://blog.naver.com/sexpo15" target="_blank" rel="noopener">블로그 전체 보기 <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <ol class="posts">
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224447508927" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMjBfMzYg/MDAxNzkyNDYwODk3NDcz.LVOP7mri7JagnI0dd_Szy-9-dklrJn7mwSFQvLsfA3wg.mxXfnQJIPcIGTSLIEpfvvn7-D43lptD1yLSY4S8FjAkg.PNG/img_01.png?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">노트북 vs 데스크톱 게이밍 PC, 원룸·좁은 공간이라면 뭘 사야 할까. 라이젠7 레노버</span>
+                <span class="post-meta">디지털 · 2026.10.20</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224444173749" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTZfNTUg/MDAxNzkyMTU4MzgzNzk0.zcm-IVKGjPBH_Vh-TdA6-ZZTuN9cU1UDXHEIpZDkstgg.sEQ5wCITy4XEM0S1jZ3OHYNTZ67szLFjS5d9fIBPRqYg.JPEG/IMG%A3%DF1058.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">네스클 롯데부산본점 팝업</span>
+                <span class="post-meta">백화점, 아울렛, 쇼핑몰 소식 · 2026.10.16</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224444161244" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTZfMjcx/MDAxNzkyMTU3MjA3MzY5.BVGKEAr4jBV38GthD341lT2BOrDsViI2YYdSkFyHqfYg.I7qlPAELGJixzevCItLevsPly0yNh0ydb5TD164nIr8g.JPEG/IMG%A3%DF1008.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">금주의 롯데몰동부산 및 롯데아울렛동부산 행사 골프 마크론나 말본 등</span>
+                <span class="post-meta">백화점, 아울렛, 쇼핑몰 소식 · 2026.10.16</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224441559005" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTRfMTEw/MDAxNzkxOTYyNTkyODAx.JJ1TBU1g4naviKCssP5s0tjTgKmvirhKTBSSauGsBDMg.A-ZI0WmuLtnULwxk1hXSziCaMCKtqfDDEUttPTEuifUg.PNG/image.png?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">아이폰 듀오 사전예약 D-2, 금요일 밤 9시에 알람 안 맞추면 진짜 후회합니다</span>
+                <span class="post-meta">디지털 · 2026.10.14</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224437908605" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTFfOTgg/MDAxNzkxNjkxNDM4MTI1.67CwxDcSH-dXLX2OYvU5SOGXeyrwmngvJz7Bw6kx2XEg.n_Wo29DAcW89p29b6VSXTnvCLpMMrJkN4B8-6ycJfeQg.JPEG/IMG%A3%DF0865.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">더현대 서울 일요일 코스｜한정선 오픈런 → 이쿠라 → 에비스 팝업 마지막 날</span>
+                <span class="post-meta">백화점, 아울렛, 쇼핑몰 소식 · 2026.10.11</span>
+              </span>
+            </a>
+          </li>
+          <li class="post">
+            <a href="https://blog.naver.com/sexpo15/224436801260" target="_blank" rel="noopener">
+              <span class="thumb"><img src="https://blogthumb.pstatic.net/MjAyNjEwMTBfMTAw/MDAxNzkxNTgwNDkwODc5.iaCJyHEwiIY8VW9qCqoOjryHfIPilVrialmYMo1AYKMg.rp3ZxmjvBoBu_9vQ8lkX7CH0CmaZLDyvRaYCI_WsD9gg.JPEG/IMG%A3%DF0751.jpg?type=s3" alt="" loading="lazy" decoding="async"></span>
+              <span class="post-body">
+                <span class="post-title">10월 둘째 주 백화점·아울렛·스타필드 행사 총정리 (10/10~10/18)</span>
+                <span class="post-meta">[블챌] 왓츠인마이블로그 · 2026.10.10</span>
+              </span>
+            </a>
+          </li></ol>
+        
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot-row">
+      <span>최신글 기준 <strong>2026.10.22 00:16</strong></span>
+      <span class="dot">·</span>
+      <span id="sync-state">열 때마다 최신글을 다시 확인합니다</span>
+    </div>
+    <div class="foot-row"><span>이 사이트는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</span></div>
+  </footer>
+</div>
+
+<script>
+// 페이지를 열 때 각 블로그 RSS를 다시 읽어 최신글을 갱신합니다.
+// 네이버 RSS는 CORS 헤더를 주지 않으므로 공개 프록시를 차례로 시도하고,
+// 모두 실패하면 아무것도 바꾸지 않습니다 (구워둔 최신글이 그대로 보입니다).
+(function () {
+  var BLOGS = [{"id":"kgg8308","feedUrl":"https://rss.blog.naver.com/kgg8308.xml"},{"id":"sexpo15","feedUrl":"https://rss.blog.naver.com/sexpo15.xml"}];
+  var PROXIES = [
+    function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+    function (u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); },
+    function (u) { return 'https://api.cors.lol/?url=' + encodeURIComponent(u); }
+  ];
+  var state = document.getElementById('sync-state');
+
+  function text(el, name) {
+    var n = el.getElementsByTagName(name)[0];
+    return n && n.textContent ? n.textContent.trim() : '';
+  }
+  function fmt(d) {
+    if (!d || isNaN(d)) return '';
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate());
+  }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function render(items) {
+    return items.map(function (it) {
+      var meta = [it.category, fmt(it.date)].filter(Boolean).map(esc).join(' · ');
+      var thumb = it.thumb
+        ? '<span class="thumb"><img src="' + esc(it.thumb) + '" alt="" loading="lazy" decoding="async"></span>'
+        : '<span class="thumb thumb-empty" aria-hidden="true"></span>';
+      return '<li class="post"><a href="' + esc(it.link) + '" target="_blank" rel="noopener">' + thumb +
+        '<span class="post-body"><span class="post-title">' + esc(it.title) +
+        '</span><span class="post-meta">' + meta + '</span></span></a></li>';
+    }).join('');
+  }
+
+  function fetchFeed(url) {
+    var i = 0;
+    function attempt() {
+      if (i >= PROXIES.length) return Promise.reject(new Error('all proxies failed'));
+      var target = PROXIES[i++](url);
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, 9000);
+      return fetch(target, { signal: ctrl.signal })
+        .then(function (r) {
+          clearTimeout(timer);
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+        .then(function (body) {
+          var doc = new DOMParser().parseFromString(body, 'text/xml');
+          var nodes = doc.getElementsByTagName('item');
+          if (!nodes.length) throw new Error('no items');
+          var out = [];
+          for (var n = 0; n < nodes.length && out.length < 6; n++) {
+            var desc = text(nodes[n], 'description');
+            var img = desc.match(/<img[^>]+src="([^"]+)"/);
+            out.push({
+              title: text(nodes[n], 'title'),
+              link: text(nodes[n], 'link').split('?')[0],
+              category: text(nodes[n], 'category'),
+              date: new Date(text(nodes[n], 'pubDate')),
+              thumb: img ? img[1] : ''
+            });
+          }
+          return out;
+        })
+        .catch(function () { clearTimeout(timer); return attempt(); });
+    }
+    return attempt();
+  }
+
+  var done = 0;
+  var fresh = 0;
+  BLOGS.forEach(function (blog) {
+    var panel = document.querySelector('[data-blog="' + blog.id + '"]');
+    if (!panel) return;
+    fetchFeed(blog.feedUrl).then(function (items) {
+      var list = panel.querySelector('.posts');
+      if (list && items.length) {
+        list.innerHTML = render(items);
+        var note = panel.querySelector('.empty');
+        if (note) note.remove();
+        var fr = panel.querySelector('.freshness');
+        if (fr) fr.textContent = '최근 글 ' + fmt(items[0].date);
+        fresh++;
+      }
+    }).catch(function () {}).then(function () {
+      if (++done === BLOGS.length && state) {
+        state.textContent = fresh
+          ? '방금 블로그 ' + fresh + '곳 최신글 갱신'
+          : '지금은 갱신 불가 — 저장된 최신글을 보여줍니다';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
