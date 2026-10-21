@@ -30,13 +30,13 @@ const CONFIG = {
     // 둘 다 비어 있는 상품은 페이지에 나오지 않는다.
     picks: [
       {
-        title: '레노버 LOQ 15AHP11 라이젠7 RTX 5060',
-        desc: '원룸·좁은 책상이면 데스크톱보다 이쪽. 직접 비교해 본 결론.',
+        title: '삼성 갤럭시북6 NT740VJQ-A58A',
+        desc: '14인치 가성비 사무용. 학생·사무용으로 고민된다면.',
         image:
-          'https://blogthumb.pstatic.net/MjAyNjEwMjBfMzYg/MDAxNzkyNDYwODk3NDcz.LVOP7mri7JagnI0dd_Szy-9-dklrJn7mwSFQvLsfA3wg.mxXfnQJIPcIGTSLIEpfvvn7-D43lptD1yLSY4S8FjAkg.PNG/img_01.png?type=s3',
-        link: 'https://link.coupang.com/a/hZy6y0iCXY',
-        post: 'https://blog.naver.com/sexpo15/224447508927',
-        badge: '게이밍 노트북',
+          'https://postfiles.pstatic.net/MjAyNjA5MDdfNzYg/MDAxNzg4NzQ2ODcwOTY2.r4kWPJb4EcXaT0cX2YHoBFA343lCoIpomu894WJtswAg.uMuMSUTZBYqWFp385r1uf4JbmxjLQRYYcw_rlGKWa-8g.PNG/image.png',
+        link: 'https://link.coupang.com/a/gQdWZsXmTY',
+        post: 'https://blog.naver.com/kgg8308/224403410493',
+        badge: '노트북',
       },
       {
         title: '플레이스테이션 5 프로',
@@ -55,6 +55,15 @@ const CONFIG = {
         link: 'https://link.coupang.com/a/hnIMTWiTWm',
         post: 'https://blog.naver.com/sexpo15/224423876618',
         badge: '시계',
+      },
+      {
+        title: '한우먹는날 한우 도가니탕 700g 3개',
+        desc: '독립문 대성집 60년 노포의 그 맛을 집에서.',
+        image:
+          'https://postfiles.pstatic.net/MjAyNjEwMTJfMjQw/MDAxNzkxNzkwMzYzMzAw.7RbDCXJVIGvapMOYXqFudgChGTAkSuWPxfqZii-V3XIg.d5AuCdTbqzl99DlKw0lr84feBXyMWy32a9_xTk3dwKUg.JPEG/SE-C531F8BA-F15F-471C-A572-A6225738EB0A.jpg',
+        link: 'https://link.coupang.com/a/hMG5Hp9Njo',
+        post: 'https://blog.naver.com/kgg8308/224439196444',
+        badge: '맛집 밀키트',
       },
     ],
   },
@@ -427,7 +436,7 @@ a { color: inherit; text-decoration: none; }
 
 /* 추천 */
 .picks-wrap { padding: 18px 0 10px; }
-.picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
 .pick a {
   display: flex;
   flex-direction: column;
@@ -602,12 +611,10 @@ footer {
 .foot-row .dot { opacity: .5; }
 
 @media (max-width: 860px) {
-  .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blogs { grid-template-columns: 1fr; margin-top: 44px; }
   .hero { padding: 44px 0 32px; }
 }
 @media (max-width: 560px) {
-  .picks { grid-template-columns: 1fr; }
   .topnav { display: none; }
 }
 </style>
