@@ -212,7 +212,6 @@ const allPosts = blogs
   .sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
 
 const builtAt = new Date();
-const builtLabel = `${fmtDate(builtAt)} ${String(builtAt.getHours()).padStart(2, '0')}:${String(builtAt.getMinutes()).padStart(2, '0')}`;
 
 const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
 const metaDesc = plain(CONFIG.tagline).slice(0, 155);
@@ -593,7 +592,7 @@ ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section clas
 
   <footer>
     <div class="foot-row">
-      <span>최신글 기준 <strong>${esc(builtLabel)}</strong></span>
+      <span>마지막 새 글 <strong>${esc(fmtDate(allPosts[0]?.date || builtAt))}</strong></span>
       <span class="dot">·</span>
       <span>6시간마다 자동으로 새 글을 반영합니다</span>
     </div>
