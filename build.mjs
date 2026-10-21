@@ -32,6 +32,7 @@ const CONFIG = {
         image:
           'https://blogthumb.pstatic.net/MjAyNjEwMjBfMzYg/MDAxNzkyNDYwODk3NDcz.LVOP7mri7JagnI0dd_Szy-9-dklrJn7mwSFQvLsfA3wg.mxXfnQJIPcIGTSLIEpfvvn7-D43lptD1yLSY4S8FjAkg.PNG/img_01.png?type=s3',
         link: '',
+        post: 'https://blog.naver.com/sexpo15/224447508927',
         badge: '노트북',
       },
       {
@@ -40,6 +41,7 @@ const CONFIG = {
         image:
           'https://blogthumb.pstatic.net/MjAyNjA5MjhfMzIg/MDAxNzkwNTgwNjAwNzc2.fTmDAc0Xzo8cWsOqkjXYYWej0GN70VE9v8bp4tsBg_sg.oohgAS4Rur6ALXMNh4rlJkYlCoRQMupwbRuiMSawGpkg.JPEG/IMG%A3%DF9225.jpg?type=s3',
         link: '',
+        post: 'https://blog.naver.com/sexpo15/224424954013',
         badge: '러닝화',
       },
       {
@@ -48,6 +50,7 @@ const CONFIG = {
         image:
           'https://blogthumb.pstatic.net/MjAyNjA5MjdfMTk3/MDAxNzkwNDkxMjkyODAw.N1Ge-_zN_p-emgesKR9shX51IvVcsye0t4imITSsHuMg.1LbhNCZcir0kl5lMCi6qNmd2SifkD3MNYbMbKRs3KGwg.PNG/image.png?type=s3',
         link: '',
+        post: 'https://blog.naver.com/sexpo15/224423876618',
         badge: '시계',
       },
     ],
@@ -212,9 +215,10 @@ const blogPanel = (blog) => `
           : ''}
       </section>`;
 
+// 파트너스 링크가 있으면 쿠팡으로, 없으면 그 제품을 다룬 리뷰 글로 보낸다.
 const pickCard = (p) => `
         <li class="pick">
-          <a href="${esc(p.link)}" target="_blank" rel="nofollow sponsored noopener">
+          <a href="${esc(p.link || p.post)}" target="_blank" rel="${p.link ? 'nofollow sponsored noopener' : 'noopener'}">
             ${p.image
               ? `<span class="pick-img"><img src="${esc(p.image)}" alt="" loading="lazy" decoding="async"></span>`
               : '<span class="pick-img pick-img-empty" aria-hidden="true"></span>'}
@@ -222,7 +226,7 @@ const pickCard = (p) => `
               ${p.badge ? `<span class="pick-badge">${esc(p.badge)}</span>` : ''}
               <span class="pick-title">${esc(p.title)}</span>
               ${p.desc ? `<span class="pick-desc">${esc(p.desc)}</span>` : ''}
-              <span class="pick-cta">최저가 보러 가기 <span aria-hidden="true">&rarr;</span></span>
+              <span class="pick-cta">${p.link ? '최저가 보러 가기' : '리뷰 보기'} <span aria-hidden="true">&rarr;</span></span>
             </span>
           </a>
         </li>`;
@@ -233,13 +237,8 @@ const picksSection = (picks) => `
           <h2>이 달의 추천</h2>
           <p>리뷰하면서 실제로 쓰고 있는 물건만 올립니다.</p>
         </div>
-        ${picks.length
-          ? `<ul class="picks">${picks.map(pickCard).join('')}</ul>
-        <p class="disclosure">${esc(CONFIG.coupang.disclosure)}</p>`
-          : `<div class="picks-empty">
-          <p><strong>추천 상품 자리입니다.</strong></p>
-          <p>쿠팡 파트너스 링크를 <code>build.mjs</code> 의 <code>CONFIG.coupang.picks</code> 안 각 상품의 <code>link</code> 에 넣고 다시 실행하면 이 자리에 카드로 깔립니다.</p>
-        </div>`}
+        <ul class="picks">${picks.map(pickCard).join('')}</ul>
+        ${picks.some((p) => p.link) ? `<p class="disclosure">${esc(CONFIG.coupang.disclosure)}</p>` : ''}
       </section>`;
 
 /* ───────────────────────── 빌드 ───────────────────────── */
@@ -251,7 +250,8 @@ const allPosts = blogs
   .flatMap((b) => b.items.map((it) => ({ ...it, blog: b.name || b.id })))
   .sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
 
-const livePicks = CONFIG.coupang.picks.filter((p) => p.link && p.link.trim());
+// 파트너스 링크가 아직 없어도 리뷰 글이 있으면 카드로 보여준다.
+const livePicks = CONFIG.coupang.picks.filter((p) => (p.link || p.post || '').trim());
 const builtAt = new Date();
 
 const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
@@ -675,6 +675,6 @@ if (siteUrl) {
 for (const b of blogs) {
   console.log(b.ok ? `OK   ${b.name} — 글 ${b.items.length}개` : `실패 ${b.id} — ${b.note}`);
 }
-console.log(livePicks.length ? `추천 상품 ${livePicks.length}개 노출` : `추천 섹션 숨김 — 링크가 채워진 상품이 없습니다 (대기 ${CONFIG.coupang.picks.length}개)`);
+console.log(`추천 상품 ${livePicks.length}개 노출 (쿠팡 링크 ${CONFIG.coupang.picks.filter((p) => p.link).length}개 / 나머지는 리뷰 글로 연결)`);
 console.log(siteUrl ? `sitemap.xml / robots.txt 생성 (${siteUrl})` : 'siteUrl 비어 있음 → sitemap.xml / robots.txt 생략');
 console.log(`만들었습니다: ${out}`);
