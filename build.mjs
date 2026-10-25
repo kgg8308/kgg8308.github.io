@@ -226,7 +226,7 @@ function loadPlaceStore() {
 }
 
 const decodeAttr = (s) =>
-  s.replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))).replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
 // JSON 안을 훑어 이름 + 좌표를 가진 객체를 모두 장소로 본다 (에디터 버전마다 구조가 달라서).
 function collectPlaces(node, out) {
@@ -325,7 +325,7 @@ async function buildPlaces(blogs) {
 
   const pins = [];
   for (const [link, post] of Object.entries(store.posts)) {
-    for (const pl of post.places || []) pins.push({ ...pl, link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb });
+    for (const pl of post.places || []) pins.push({ ...pl, name: decodeAttr(pl.name), address: decodeAttr(pl.address || ''), link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb });
   }
   for (const m of CONFIG.places) {
     if (!m?.name) continue;
@@ -357,11 +357,11 @@ async function buildPlaces(blogs) {
 const mapSection = (pins) => `
       <section class="map-wrap" id="map">
         <div class="section-head">
-          <h2>맛집 지도</h2>
+          <h2>맛집·핫플 지도</h2>
           <p>직접 다녀와서 글로 남긴 곳 <strong>${pins.length}</strong>곳. 핀을 누르면 리뷰로 이어집니다.</p>
         </div>
         <div class="map-box">
-          <div id="placemap" class="placemap" role="region" aria-label="맛집 지도"><span class="map-loading">지도를 불러오는 중…</span></div>
+          <div id="placemap" class="placemap" role="region" aria-label="맛집·핫플 지도"><span class="map-loading">지도를 불러오는 중…</span></div>
         </div>
         <script type="application/json" id="place-data">${JSON.stringify(
           pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, t: p.title, c: p.category, d: p.date, i: p.thumb })),
@@ -857,7 +857,7 @@ footer {
     <a class="brand" href="#top">${esc(CONFIG.siteTitle)}</a>
     <nav class="topnav">
       ${livePicks.length ? '<a href="#picks">추천</a>' : ''}
-      ${pins.length ? '<a href="#map">맛집 지도</a>' : ''}
+      ${pins.length ? '<a href="#map">지도</a>' : ''}
 ${blogs.map((b) => `      <a href="#${esc(b.id)}">${esc(b.kicker)}</a>`).join('\n')}
     </nav>
     <div class="visits" aria-label="방문자 수">
