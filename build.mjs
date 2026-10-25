@@ -390,6 +390,21 @@ a { color: inherit; text-decoration: none; }
 .brand { font-weight: 800; letter-spacing: -0.03em; font-size: 15.5px; }
 .topnav { margin-left: auto; display: flex; gap: 18px; font-size: 13.5px; color: var(--muted); font-weight: 600; }
 .topnav a:hover { color: var(--ink); }
+.visits {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.visits b { color: var(--ink); font-weight: 800; }
+.visits .sep { opacity: .4; }
 
 /* 히어로 */
 .hero { padding: 64px 0 44px; }
@@ -623,6 +638,7 @@ footer {
 }
 @media (max-width: 560px) {
   .topnav { display: none; }
+  .visits { margin-left: auto; }
 }
 </style>
 <script type="application/ld+json">${jsonLd}</script>
@@ -636,6 +652,9 @@ footer {
       ${livePicks.length ? '<a href="#picks">추천</a>' : ''}
 ${blogs.map((b) => `      <a href="#${esc(b.id)}">${esc(b.kicker)}</a>`).join('\n')}
     </nav>
+    <div class="visits" aria-label="방문자 수">
+      <span>오늘 <b id="v-today">-</b></span><span class="sep">|</span><span>전체 <b id="v-total">-</b></span>
+    </div>
   </div>
 </div>
 
@@ -666,6 +685,29 @@ ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section clas
     <div class="foot-row"><span>${esc(CONFIG.coupang.disclosure)}</span></div>
   </footer>
 </div>
+
+<script>
+// 방문자 수: 같은 브라우저는 하루 한 번만 집계합니다 (새로고침으로 숫자가 부풀지 않도록).
+(function () {
+  var API = 'https://abacus.jasoncameron.dev';
+  var NS = 'kgg8308-github-io';
+  var day = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10).replace(/-/g, ''); // 한국 시간 기준 날짜
+  var seenKey = 'visited-' + day;
+  var seen = false;
+  try { seen = localStorage.getItem(seenKey) === '1'; } catch (e) {}
+  var mode = seen ? 'get' : 'hit';
+  function fmt(n) { return Number(n || 0).toLocaleString('ko-KR'); }
+  function load(key, el) {
+    return fetch(API + '/' + mode + '/' + NS + '/' + key)
+      .then(function (r) { return r.ok ? r.json() : { value: 0 }; })
+      .then(function (d) { document.getElementById(el).textContent = fmt(d.value); })
+      .catch(function () {});
+  }
+  Promise.all([load('day-' + day, 'v-today'), load('total', 'v-total')]).then(function () {
+    if (!seen) { try { localStorage.setItem(seenKey, '1'); } catch (e) {} }
+  });
+})();
+</script>
 
 </body>
 </html>
