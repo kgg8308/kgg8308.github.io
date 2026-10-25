@@ -4,7 +4,7 @@
 // 고칠 곳은 아래 CONFIG 뿐입니다. 고친 뒤 `node homepage/build.mjs` 또는
 // `홈페이지_새로고침.bat` 을 실행하면 다시 만들어집니다.
 
-import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { writeFileSync, mkdirSync, rmSync, readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,6 +68,13 @@ const CONFIG = {
       },
     ],
   },
+
+  // ── 맛집 지도 ─────────────────────────────────────────────────
+  // 글에 네이버 '장소'를 첨부하면 자동으로 지도에 핀이 꽂힙니다.
+  // 장소 첨부가 없는 글을 지도에 넣고 싶을 때만 여기에 적으세요.
+  //   { name: '가게 이름', address: '도로명 주소', post: '블로그 글 주소' }
+  // (좌표를 알면 lat, lng 를 같이 적어도 됩니다. 없으면 주소로 자동 변환)
+  places: [],
 
   // ── 블로그 ────────────────────────────────────────────────────
   blogs: [
@@ -194,11 +201,172 @@ async function loadBlog(blog) {
     const feed = parseFeed(await res.text());
     if (!feed.name) return { ...base, note: '이 주소에서 블로그를 찾지 못했습니다' };
     const avatar = await saveImage(feed.avatar, `${blog.id}-profile`);
-    return { ...base, ...feed, avatar, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
+    return { ...base, ...feed, avatar, allItems: feed.items, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
   } catch (err) {
     return { ...base, note: `불러오지 못했습니다 (${err.message})` };
   }
 }
+
+/* ───────────────────────── 맛집 지도 ───────────────────────── */
+//
+// 블로그 글 본문에서 네이버 '장소' 첨부(가게 이름·주소·좌표)를 찾아 places.json 에 모은다.
+// 한 번 확인한 글은 다시 읽지 않고, RSS 에서 밀려난 옛 글의 장소도 계속 남는다.
+
+const PLACES_FILE = join(HERE, 'places.json');
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const inKorea = (lat, lng) => lat > 32.8 && lat < 38.9 && lng > 124 && lng < 132.2;
+
+function loadPlaceStore() {
+  try {
+    const d = JSON.parse(readFileSync(PLACES_FILE, 'utf8'));
+    return { posts: d.posts || {}, geocode: d.geocode || {} };
+  } catch {
+    return { posts: {}, geocode: {} };
+  }
+}
+
+const decodeAttr = (s) =>
+  s.replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+// JSON 안을 훑어 이름 + 좌표를 가진 객체를 모두 장소로 본다 (에디터 버전마다 구조가 달라서).
+function collectPlaces(node, out) {
+  if (!node || typeof node !== 'object') return;
+  if (Array.isArray(node)) return node.forEach((n) => collectPlaces(n, out));
+  const ll = node.latlng || node.latLng || node;
+  const lat = parseFloat(ll.latitude ?? ll.lat ?? ll.y);
+  const lng = parseFloat(ll.longitude ?? ll.lng ?? ll.x);
+  const name = node.name || node.placeName || node.title;
+  if (typeof name === 'string' && name.trim() && inKorea(lat, lng)) {
+    out.push({
+      name: name.trim(),
+      address: String(node.address || node.roadAddress || node.addr || '').trim(),
+      lat: +lat.toFixed(6),
+      lng: +lng.toFixed(6),
+    });
+    return;
+  }
+  for (const v of Object.values(node)) collectPlaces(v, out);
+}
+
+function extractPlaces(html) {
+  const found = [];
+  for (const m of html.matchAll(/data-(?:linkdata|module)\s*=\s*(['"])([\s\S]*?)\1/g)) {
+    const raw = decodeAttr(m[2]);
+    if (!/lat|longitude|latlng/i.test(raw)) continue;
+    try {
+      collectPlaces(JSON.parse(raw), found);
+    } catch {}
+  }
+  const seen = new Set();
+  return found.filter((p) => {
+    const k = `${p.name}|${p.lat.toFixed(4)}|${p.lng.toFixed(4)}`;
+    return seen.has(k) ? false : seen.add(k);
+  });
+}
+
+async function fetchPostPlaces(blogId, link) {
+  const logNo = link.split('/').pop();
+  const url = `https://blog.naver.com/PostView.naver?blogId=${blogId}&logNo=${logNo}&redirect=Dlog&widgetTypeCall=true`;
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(20000),
+    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36' },
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return extractPlaces(await res.text());
+}
+
+// 주소 → 좌표 (CONFIG.places 에 좌표 없이 적은 곳만). OpenStreetMap 무료 검색, 결과는 저장해 재사용.
+async function geocode(address, store) {
+  if (address in store.geocode) return store.geocode[address];
+  let result = null;
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=kr&q=${encodeURIComponent(address)}`,
+      { signal: AbortSignal.timeout(15000), headers: { 'User-Agent': 'kgg8308.github.io blog map' } },
+    );
+    const [hit] = res.ok ? await res.json() : [];
+    if (hit && inKorea(+hit.lat, +hit.lon)) result = [+(+hit.lat).toFixed(6), +(+hit.lon).toFixed(6)];
+    await sleep(1100);
+  } catch {
+    return null; // 일시 오류는 저장하지 않고 다음에 다시 시도
+  }
+  store.geocode[address] = result;
+  return result;
+}
+
+async function buildPlaces(blogs) {
+  const store = loadPlaceStore();
+  let checked = 0;
+  let failed = 0;
+  for (const blog of blogs) {
+    for (const it of blog.allItems || []) {
+      const prev = store.posts[it.link];
+      const meta = {
+        blog: blog.id,
+        title: it.title,
+        category: it.category,
+        date: isoDate(it.date),
+        thumb: it.thumb,
+      };
+      if (prev) {
+        Object.assign(prev, meta); // 제목·썸네일이 바뀌었으면 반영
+        continue;
+      }
+      try {
+        const places = await fetchPostPlaces(blog.id, it.link);
+        store.posts[it.link] = { ...meta, places };
+        checked++;
+      } catch {
+        failed++;
+      }
+      await sleep(400);
+    }
+  }
+
+  const pins = [];
+  for (const [link, post] of Object.entries(store.posts)) {
+    for (const pl of post.places || []) pins.push({ ...pl, link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb });
+  }
+  for (const m of CONFIG.places) {
+    if (!m?.name) continue;
+    let ll = m.lat && m.lng ? [m.lat, m.lng] : m.address ? await geocode(m.address, store) : null;
+    if (!ll) {
+      console.log(`지도 — 위치를 찾지 못함: ${m.name} (${m.address || '주소 없음'})`);
+      continue;
+    }
+    const post = store.posts[m.post] || {};
+    pins.push({ name: m.name, address: m.address || '', lat: ll[0], lng: ll[1], link: m.post || '', blog: post.blog || 'kgg8308', title: post.title || m.name, category: post.category || '', date: post.date || '', thumb: post.thumb || '' });
+  }
+  // 두 블로그에 같은 곳을 올린 경우 핀은 하나만 (맛집 블로그 글 우선, 그다음 최신 글)
+  const first = CONFIG.blogs[0].id;
+  pins.sort((a, b) => (b.blog === first) - (a.blog === first) || (b.date || '').localeCompare(a.date || ''));
+  const seenPin = new Set();
+  const unique = pins.filter((p) => {
+    const k = `${p.name.replace(/\s+/g, '')}|${p.lat.toFixed(3)}|${p.lng.toFixed(3)}`;
+    return seenPin.has(k) ? false : seenPin.add(k);
+  });
+  unique.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  // 정렬해서 저장 → 내용이 같으면 파일도 같아 불필요한 커밋이 생기지 않는다.
+  const sorted = (o) => Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]]));
+  writeFileSync(PLACES_FILE, JSON.stringify({ posts: sorted(store.posts), geocode: sorted(store.geocode) }, null, 1) + '\n', 'utf8');
+  console.log(`지도 — 핀 ${unique.length}개 (새로 확인한 글 ${checked}개${failed ? `, 못 읽은 글 ${failed}개는 다음에 재시도` : ''})`);
+  return unique;
+}
+
+const mapSection = (pins) => `
+      <section class="map-wrap" id="map">
+        <div class="section-head">
+          <h2>맛집 지도</h2>
+          <p>직접 다녀와서 글로 남긴 곳 <strong>${pins.length}</strong>곳. 핀을 누르면 리뷰로 이어집니다.</p>
+        </div>
+        <div class="map-box">
+          <div id="placemap" class="placemap" role="region" aria-label="맛집 지도"><span class="map-loading">지도를 불러오는 중…</span></div>
+        </div>
+        <script type="application/json" id="place-data">${JSON.stringify(
+          pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, t: p.title, c: p.category, d: p.date, i: p.thumb })),
+        ).replace(/</g, '\\u003c')}</script>
+      </section>`;
 
 /* ───────────────────────── 조각 ───────────────────────── */
 
@@ -281,6 +449,9 @@ for (const [i, p] of livePicks.entries()) {
   p.image = (await saveImage(p.image, `pick-${i + 1}`)) || p.image;
 }
 const builtAt = new Date();
+
+const pins = await buildPlaces(blogs);
+const blogAccent = Object.fromEntries(CONFIG.blogs.map((b) => [b.id, b.accent]));
 
 const siteUrl = CONFIG.siteUrl.replace(/\/+$/, '');
 const metaDesc = plain(CONFIG.tagline).slice(0, 155);
@@ -455,6 +626,42 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.03em;
 }
 .section-head p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+
+/* 맛집 지도 */
+.map-wrap { padding: 34px 0 6px; }
+.map-box {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.placemap { height: clamp(380px, 62vh, 560px); width: 100%; background: #dfe7ec; display: grid; place-items: center; z-index: 0; }
+.map-loading { font-size: 13px; color: #6b7280; }
+.pin {
+  width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
+  background: var(--pc); transform: rotate(-45deg);
+  border: 2.5px solid #fff; box-shadow: 0 3px 10px rgba(0,0,0,.35);
+  display: grid; place-items: center;
+}
+.pin::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+.pin-cluster {
+  min-width: 38px; height: 38px; padding: 0 8px; border-radius: 999px;
+  background: #17191c; color: #fff; font: 800 13.5px/1 inherit;
+  display: grid; place-items: center; border: 3px solid #fff; box-shadow: 0 3px 12px rgba(0,0,0,.35);
+}
+.leaflet-container { font-family: inherit; }
+.leaflet-popup-content-wrapper { border-radius: 14px; padding: 0; overflow: hidden; }
+.leaflet-popup-content { margin: 0; width: 240px !important; }
+.pop { display: block; color: #17191c; }
+.pop-img { display: block; aspect-ratio: 16 / 9; background: #eee; overflow: hidden; }
+.pop-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pop-body { display: grid; gap: 3px; padding: 11px 13px 13px; }
+.pop-name { font-weight: 800; font-size: 15px; letter-spacing: -0.02em; }
+.pop-addr { font-size: 12px; color: #6b7280; }
+.pop-title { font-size: 12.5px; color: #374151; margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pop-cta { margin-top: 5px; font-size: 13px; font-weight: 700; color: var(--pc); }
 
 /* 추천 */
 .picks-wrap { padding: 18px 0 10px; }
@@ -650,6 +857,7 @@ footer {
     <a class="brand" href="#top">${esc(CONFIG.siteTitle)}</a>
     <nav class="topnav">
       ${livePicks.length ? '<a href="#picks">추천</a>' : ''}
+      ${pins.length ? '<a href="#map">맛집 지도</a>' : ''}
 ${blogs.map((b) => `      <a href="#${esc(b.id)}">${esc(b.kicker)}</a>`).join('\n')}
     </nav>
     <div class="visits" aria-label="방문자 수">
@@ -670,6 +878,7 @@ ${blogs.map((b) => `      <a class="btn" href="#${esc(b.id)}" style="--c:${esc(b
 
   <main>
 ${livePicks.length ? picksSection(livePicks) : ""}
+${pins.length ? mapSection(pins) : ''}
 
     <div class="blogs">
 ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section class="panel" id="${esc(b.id)}"`)).join('\n')}
@@ -685,6 +894,58 @@ ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section clas
     <div class="foot-row"><span>${esc(CONFIG.coupang.disclosure)}</span></div>
   </footer>
 </div>
+
+${pins.length ? `<script>
+// 맛집 지도: 화면 가까이 왔을 때만 지도 라이브러리를 불러온다 (첫 화면 속도 유지).
+(function () {
+  var box = document.getElementById('placemap');
+  if (!box) return;
+  var ACCENT = ${JSON.stringify(blogAccent)};
+  var started = false;
+  function css(href) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); }
+  function js(src) { return new Promise(function (ok, no) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+  function e(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function start() {
+    if (started) return; started = true;
+    var L0 = 'https://unpkg.com/leaflet@1.9.4/dist/', C0 = 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/';
+    css(L0 + 'leaflet.css'); css(C0 + 'MarkerCluster.css');
+    js(L0 + 'leaflet.js').then(function () { return js(C0 + 'leaflet.markercluster.js'); }).then(draw).catch(function () {
+      box.innerHTML = '<span class="map-loading">지도를 불러오지 못했습니다. 새로고침해 주세요.</span>';
+    });
+  }
+  function draw() {
+    var data = JSON.parse(document.getElementById('place-data').textContent);
+    box.innerHTML = '';
+    var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.5 }).setView([36.3, 127.8], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    var group = L.markerClusterGroup({
+      showCoverageOnHover: false, maxClusterRadius: 46,
+      iconCreateFunction: function (c) { return L.divIcon({ html: '<div class="pin-cluster">' + c.getChildCount() + '</div>', className: '', iconSize: [40, 40] }); }
+    });
+    data.forEach(function (p) {
+      var c = ACCENT[p.b] || '#e4572e';
+      var icon = L.divIcon({ html: '<div class="pin" style="--pc:' + c + '"></div>', className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+      var html = '<a class="pop" style="--pc:' + c + '" href="' + e(p.l) + '" target="_blank" rel="noopener">' +
+        (p.i ? '<span class="pop-img"><img src="' + e(p.i) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>' : '') +
+        '<span class="pop-body"><span class="pop-name">' + e(p.n) + '</span>' +
+        (p.a ? '<span class="pop-addr">' + e(p.a) + '</span>' : '') +
+        (p.t && p.t !== p.n ? '<span class="pop-title">' + e(p.t) + '</span>' : '') +
+        (p.l ? '<span class="pop-cta">리뷰 보기 &rarr;</span>' : '') + '</span></a>';
+      group.addLayer(L.marker([p.y, p.x], { icon: icon, title: p.n, alt: p.n }).bindPopup(html, { maxWidth: 260 }));
+    });
+    map.addLayer(group);
+    if (data.length) map.fitBounds(group.getBounds(), { padding: [36, 36], maxZoom: 14 });
+    // PC: 지도를 한 번 클릭해야 마우스 휠 확대가 켜진다 (페이지 스크롤이 지도에 걸리지 않게).
+    map.once('focus click', function () { map.scrollWheelZoom.enable(); });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '400px' });
+    io.observe(box);
+  } else start();
+})();
+</script>` : ''}
 
 <script>
 // 방문자 수: 같은 브라우저는 하루 한 번만 집계합니다 (새로고침으로 숫자가 부풀지 않도록).
