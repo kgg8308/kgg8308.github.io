@@ -214,7 +214,11 @@ async function loadBlog(blog) {
     const feed = parseFeed(await res.text());
     if (!feed.name) return { ...base, note: '이 주소에서 블로그를 찾지 못했습니다' };
     const avatar = await saveImage(feed.avatar, `${blog.id}-profile`);
-    return { ...base, ...feed, avatar, allItems: feed.items, items: feed.items.slice(0, POSTS_PER_BLOG), ok: true };
+    // 최근 글 썸네일은 사이트에 같이 올린다. 네이버가 외부 사이트에서 부르는 썸네일을 막아
+    // 휴대폰(사파리 등)에서 ? 깨진 이미지로 보이기 때문.
+    const items = feed.items.slice(0, POSTS_PER_BLOG);
+    for (const it of items) it.localThumb = await saveImage(it.thumb, `post-${it.link.split('/').pop()}`);
+    return { ...base, ...feed, avatar, allItems: feed.items, items, ok: true };
   } catch (err) {
     return { ...base, note: `불러오지 못했습니다 (${err.message})` };
   }
@@ -492,8 +496,8 @@ const mapSection = (pins) => `
 const postItem = (post) => `
           <li class="post">
             <a href="${esc(post.link)}" target="_blank" rel="noopener">
-              ${post.thumb
-                ? `<span class="thumb"><img src="${esc(post.thumb)}" alt="" loading="lazy" decoding="async"></span>`
+              ${post.localThumb || post.thumb
+                ? `<span class="thumb"><img src="${esc(post.localThumb || post.thumb)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()"></span>`
                 : '<span class="thumb thumb-empty" aria-hidden="true"></span>'}
               <span class="post-body">
                 <span class="post-title">${esc(post.title)}</span>
