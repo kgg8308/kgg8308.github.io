@@ -77,6 +77,9 @@ const CONFIG = {
   places: [],
   // 지도 핀 색: 음식점·카페 = 맛집(빨강), 나머지 = 핫플(파랑). 자동 분류가 틀린 곳만 여기서 고치세요.
   //   '가게 이름(일부만 적어도 됨)': 'food' (맛집)  또는  'hot' (핫플)
+  // 폐업한 곳: 이름(일부만 적어도 됨)을 적으면 지도에 X 표시로 바뀝니다.
+  //   예) closed: ['회상', '필로우 문래'],
+  closed: [],
   placeKinds: {
     부타매니아동: 'food', 비비비당: 'food', 밀창고: 'food', 하가원: 'food', 기장끝집: 'food', 정짓간: 'food',
     유주키친: 'food', 호린옥: 'food', 애슐리: 'food', 온더보더: 'food', 랑만: 'food', 장만옥: 'food',
@@ -329,6 +332,11 @@ const HOT = /백화점|아울렛|몰|mall|쇼핑|마트|시장|스토어|store|s
 
 const SKIP = /주차장|주차구획|주차타워|약국|고등학교|중학교|초등학교|^\S*역\s*\d+호선$/;
 
+const isClosed = (name) => {
+  const key = String(name).replace(/\s+/g, '');
+  return CONFIG.closed.some((c) => c && key.includes(String(c).replace(/\s+/g, '')));
+};
+
 function placeKind(p, postPlaces) {
   const key = p.name.replace(/\s+/g, '');
   const hit = Object.keys(CONFIG.placeKinds).find((k) => key.includes(k.replace(/\s+/g, '')));
@@ -424,6 +432,7 @@ async function buildPlaces(blogs) {
       if (SKIP.test(decodeAttr(pl.name))) continue; // 주차장·약국 같은 안내용 장소는 지도에서 뺀다
       const pin = { ...pl, name: decodeAttr(pl.name), address: decodeAttr(pl.address || ''), link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb };
       pin.kind = placeKind(pin, n);
+      pin.closed = isClosed(pin.name);
       pins.push(pin);
     }
   }
@@ -437,6 +446,7 @@ async function buildPlaces(blogs) {
     const post = store.posts[m.post] || {};
     const pin = { name: m.name, address: m.address || '', lat: ll[0], lng: ll[1], link: m.post || '', blog: post.blog || 'kgg8308', title: post.title || m.name, category: post.category || '', date: post.date || '', thumb: post.thumb || '' };
     pin.kind = m.kind === 'food' || m.kind === 'hot' ? m.kind : placeKind(pin, 1);
+    pin.closed = m.closed === true || isClosed(m.name);
     pins.push(pin);
   }
   // 두 블로그에 같은 곳을 올린 경우 핀은 하나만 (맛집 블로그 글 우선, 그다음 최신 글)
@@ -468,11 +478,12 @@ const mapSection = (pins) => `
             <button type="button" data-k="all" aria-pressed="true">전체 <b>${pins.length}</b></button>
             <button type="button" data-k="food" aria-pressed="false"><span class="lg-dot" style="--pc:${PIN.food}"></span>맛집 <b>${pins.filter((p) => p.kind === 'food').length}</b></button>
             <button type="button" data-k="hot" aria-pressed="false"><span class="lg-dot" style="--pc:${PIN.hot}"></span>핫플 <b>${pins.filter((p) => p.kind !== 'food').length}</b></button>
+            ${pins.some((p) => p.closed) ? `<button type="button" data-k="closed" aria-pressed="false"><span class="lg-x">✕</span>폐업 <b>${pins.filter((p) => p.closed).length}</b></button>` : ''}
           </div>
           <div id="placemap" class="placemap" role="region" aria-label="맛집·핫플 지도"><span class="map-loading">지도를 불러오는 중…</span></div>
         </div>
         <script type="application/json" id="place-data">${JSON.stringify(
-          pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, k: p.kind === 'food' ? 'food' : 'hot', t: p.title, c: p.category, d: p.date, i: p.thumb })),
+          pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, k: p.kind === 'food' ? 'food' : 'hot', ...(p.closed ? { z: 1 } : {}), t: p.title, c: p.category, d: p.date, i: p.thumb })),
         ).replace(/</g, '\\u003c')}</script>
       </section>`;
 
@@ -767,6 +778,12 @@ a { color: inherit; text-decoration: none; }
   display: grid; place-items: center;
 }
 .pin::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+/* 폐업: 원래 색은 흐리게, 가운데 흰 점 대신 X */
+.pin-closed { background: color-mix(in srgb, var(--pc) 45%, #8a8f98); }
+.pin-closed::after { content: '✕'; width: auto; height: auto; background: none; color: #fff; font: 900 13px/1 sans-serif; transform: rotate(45deg); }
+.lg-x { font-weight: 900; color: #6b7280; }
+.map-legend button[aria-pressed="true"] .lg-x { color: #fff; }
+.pop-closed { color: #6b7280; }
 .pin-cluster {
   min-width: 38px; height: 38px; padding: 0 8px; border-radius: 999px;
   background: #17191c; color: #fff; font: 800 13.5px/1 inherit;
@@ -1042,22 +1059,23 @@ ${pins.length ? `<script>
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
-    var layers = { food: [], hot: [] };
+    var layers = { food: [], hot: [], closed: [] };
     var group = L.markerClusterGroup({
       showCoverageOnHover: false, maxClusterRadius: 46,
       iconCreateFunction: function (c) { return L.divIcon({ html: '<div class="pin-cluster">' + c.getChildCount() + '</div>', className: '', iconSize: [40, 40] }); }
     });
     data.forEach(function (p) {
       var c = PIN[p.k] || PIN.hot;
-      var icon = L.divIcon({ html: '<div class="pin" style="--pc:' + c + '"></div>', className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+      var icon = L.divIcon({ html: '<div class="pin' + (p.z ? ' pin-closed' : '') + '" style="--pc:' + c + '"></div>', className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
       var html = '<a class="pop" style="--pc:' + c + '" href="' + e(p.l) + '" target="_blank" rel="noopener">' +
         (p.i ? '<span class="pop-img"><img src="' + e(p.i) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>' : '') +
-        '<span class="pop-body"><span class="pop-kind">' + (p.k === 'food' ? '맛집' : '핫플') + '</span><span class="pop-name">' + e(p.n) + '</span>' +
+        '<span class="pop-body"><span class="pop-kind">' + (p.k === 'food' ? '맛집' : '핫플') + (p.z ? ' · <span class="pop-closed">폐업</span>' : '') + '</span><span class="pop-name">' + e(p.n) + '</span>' +
         (p.a ? '<span class="pop-addr">' + e(p.a) + '</span>' : '') +
         (p.t && p.t !== p.n ? '<span class="pop-title">' + e(p.t) + '</span>' : '') +
         (p.l ? '<span class="pop-cta">리뷰 보기 &rarr;</span>' : '') + '</span></a>';
       var mk = L.marker([p.y, p.x], { icon: icon, title: p.n, alt: p.n }).bindPopup(html, { maxWidth: 260 });
       (layers[p.k] || layers.hot).push(mk);
+      if (p.z) layers.closed.push(mk);
     });
     group.addLayers(layers.food.concat(layers.hot));
     map.addLayer(group);
