@@ -82,6 +82,7 @@ const CONFIG = {
     유주키친: 'food', 호린옥: 'food', 애슐리: 'food', 온더보더: 'food', 랑만: 'food', 장만옥: 'food',
     파작: 'food', 난포: 'food', 파르노: 'food', 서령: 'food', 빠르크: 'food', 한정선: 'food', 대성집: 'food',
     류센소: 'food', 비씨씨킹덤: 'food', 이쿠라: 'food', '에비스:더라운지': 'food', 아웃백: 'food',
+    온천집: 'food', 올드머그: 'food', 까사부사노: 'food', 나막집: 'food', 그리고문래: 'food', 이흥룡: 'food',
     더베이101: 'hot', 여의나루역: 'hot', '라이다서빙고': 'hot', 케이스위스성수점: 'hot',
   },
 
@@ -323,8 +324,10 @@ async function fetchAllPosts(blogId) {
 }
 
 // 핀 종류: 음식점·카페 = 'food'(맛집), 나머지 = 'hot'(핫플)
-const FOOD = /음식|식당|베이글|바게트|페스츄리|패스츄리|로스터리|로스팅|브루잉|아라비카|찻집|다방|티하우스|한식|중식|일식|양식|분식|뷔페|카페|커피|디저트|베이커리|제과|빵|떡|술집|주점|호프|포차|이자카야|와인|칵테일|펍|bar\b|고기|갈비|삼겹|돼지|소고기|한우|곱창|막창|대창|국밥|국수|냉면|밀면|칼국수|수제비|라멘|라면|우동|소바|스시|초밥|오마카세|횟집|회센터|물회|해물|조개|장어|복어|아구|게장|대게|킹크랩|랍스|돈까스|돈카츠|카츠|덮밥|규동|텐동|야키|쿠시|닭|치킨|버거|피자|파스타|스테이크|브런치|타코|쌀국수|마라|훠궈|딤섬|짜장|짬뽕|반점|김밥|떡볶이|순대|족발|보쌈|찜|탕|찌개|전골|샤브|만두|죽|비빔|쌈밥|정식|백반|ラーメン|ramen|sushi|cafe|coffee|bakery|restaurant|bistro|kitchen|dining|grill|brewing|食|屋|亭|鮨|寿司|丼|麺|喫茶|珈琲/i;
+const FOOD = /음식|식당|미역|정찬|회센|집밥|맥주|브레드|bread|로스터스|엔젤리너스|폴 ?바셋|맥도날드|쉐이크쉑|버거킹|롯데리아|양장|스타벅스|투썸|이디야|메가커피|빽다방|블루보틀|고든램지|베이글|바게트|페스츄리|패스츄리|로스터리|로스팅|브루잉|아라비카|찻집|다방|티하우스|한식|중식|일식|양식|분식|뷔페|카페|커피|디저트|베이커리|제과|빵|떡|술집|주점|호프|포차|이자카야|와인|칵테일|펍|bar\b|고기|갈비|삼겹|돼지|소고기|한우|곱창|막창|대창|국밥|국수|냉면|밀면|칼국수|수제비|라멘|라면|우동|소바|스시|초밥|오마카세|횟집|회센터|물회|해물|조개|장어|복어|아구|게장|대게|킹크랩|랍스|돈까스|돈카츠|카츠|덮밥|규동|텐동|야키|쿠시|닭|치킨|버거|피자|파스타|스테이크|브런치|타코|쌀국수|마라|훠궈|딤섬|짜장|짬뽕|반점|김밥|떡볶이|순대|족발|보쌈|찜|탕|찌개|전골|샤브|만두|죽|비빔|쌈밥|정식|백반|ラーメン|ramen|sushi|cafe|coffee|bakery|restaurant|bistro|kitchen|dining|grill|brewing|食|屋|亭|鮨|寿司|丼|麺|喫茶|珈琲/i;
 const HOT = /백화점|아울렛|몰|mall|쇼핑|마트|시장|스토어|store|shop|숍|샵|편집|팝업|매장|센터|타워|공원|해수욕장|해변|비치|전망|스카이|박물관|미술관|갤러리|전시|서점|books|tsutaya|테마파크|월드|랜드|파크|park|공항|호텔|리조트|경기장|스타디움|체육|시티|베이스|센터|빌딩|building|百貨店|ストア|ショップ|MITSUKOSHI|PARCO|LOFT|Pokémon|포켓몬/i;
+
+const SKIP = /주차장|주차구획|주차타워|약국|고등학교|중학교|초등학교|^\S*역\s*\d+호선$/;
 
 function placeKind(p, postPlaces) {
   const key = p.name.replace(/\s+/g, '');
@@ -335,10 +338,15 @@ function placeKind(p, postPlaces) {
     return 'hot';
   }
   if (FOOD.test(p.name)) return 'food';
-  if (HOT.test(p.name)) return 'hot';
+  // 'OO 롯데몰동부산점' 처럼 입점 매장이면 지점명을 떼고 본다 (몰 안 식당이 핫플로 잡히지 않게)
+  const core = p.name
+    .split(/\s+/)
+    .filter((w) => !/롯데|신세계|현대|아울렛|백화점|몰|센텀|동부산|마린시티|엘시티|본점$|직영점$|\S+점$|^@/.test(w))
+    .join(' ');
+  if (!core || HOT.test(core)) return 'hot';
   // 이름으로 모르면 글 맥락: 맛집 카테고리 글의 단독 장소는 맛집
   const ctx = `${p.category || ''} ${p.title || ''}`;
-  if (/맛집|먹|식당|카페|국밥|라멘|뷔페/.test(ctx) && postPlaces <= 3) return 'food';
+  if ((/맛집|먹|식당|카페|국밥|라멘|뷔페|와인바|칵테일|소주|술집|이자카야/.test(ctx) || FOOD.test(p.title || '')) && postPlaces <= 3) return 'food';
   return 'hot';
 }
 
@@ -362,7 +370,7 @@ async function geocode(address, store) {
 }
 
 const STORE_V = 2; // 장소 업종(pc)을 읽기 시작한 버전. 옛 버전으로 저장된 글은 한 번 다시 읽는다.
-const MAX_SCAN = 600; // 한 번 실행에 새로 읽는 글 수 상한 (남은 글은 다음 실행 때)
+const MAX_SCAN = 2500; // 한 번 실행에 새로 읽는 글 수 상한 (남은 글은 다음 실행 때)
 
 async function buildPlaces(blogs) {
   const store = loadPlaceStore();
@@ -413,6 +421,7 @@ async function buildPlaces(blogs) {
   for (const [link, post] of Object.entries(store.posts)) {
     const n = (post.places || []).length;
     for (const pl of post.places || []) {
+      if (SKIP.test(decodeAttr(pl.name))) continue; // 주차장·약국 같은 안내용 장소는 지도에서 뺀다
       const pin = { ...pl, name: decodeAttr(pl.name), address: decodeAttr(pl.address || ''), link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb };
       pin.kind = placeKind(pin, n);
       pins.push(pin);
