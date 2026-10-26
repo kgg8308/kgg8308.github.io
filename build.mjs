@@ -75,6 +75,15 @@ const CONFIG = {
   //   { name: '가게 이름', address: '도로명 주소', post: '블로그 글 주소' }
   // (좌표를 알면 lat, lng 를 같이 적어도 됩니다. 없으면 주소로 자동 변환)
   places: [],
+  // 지도 핀 색: 음식점·카페 = 맛집(빨강), 나머지 = 핫플(파랑). 자동 분류가 틀린 곳만 여기서 고치세요.
+  //   '가게 이름(일부만 적어도 됨)': 'food' (맛집)  또는  'hot' (핫플)
+  placeKinds: {
+    부타매니아동: 'food', 비비비당: 'food', 밀창고: 'food', 하가원: 'food', 기장끝집: 'food', 정짓간: 'food',
+    유주키친: 'food', 호린옥: 'food', 애슐리: 'food', 온더보더: 'food', 랑만: 'food', 장만옥: 'food',
+    파작: 'food', 난포: 'food', 파르노: 'food', 서령: 'food', 빠르크: 'food', 한정선: 'food', 대성집: 'food',
+    류센소: 'food', 비씨씨킹덤: 'food', 이쿠라: 'food', '에비스:더라운지': 'food', 아웃백: 'food',
+    더베이101: 'hot', 여의나루역: 'hot', '라이다서빙고': 'hot', 케이스위스성수점: 'hot',
+  },
 
   // ── 블로그 ────────────────────────────────────────────────────
   blogs: [
@@ -219,9 +228,9 @@ const inKorea = (lat, lng) => lat > 32.8 && lat < 38.9 && lng > 124 && lng < 132
 function loadPlaceStore() {
   try {
     const d = JSON.parse(readFileSync(PLACES_FILE, 'utf8'));
-    return { posts: d.posts || {}, geocode: d.geocode || {} };
+    return { posts: d.posts || {}, geocode: d.geocode || {}, lists: d.lists || {} };
   } catch {
-    return { posts: {}, geocode: {} };
+    return { posts: {}, geocode: {}, lists: {} };
   }
 }
 
@@ -237,11 +246,17 @@ function collectPlaces(node, out) {
   const lng = parseFloat(ll.longitude ?? ll.lng ?? ll.x);
   const name = node.name || node.placeName || node.title;
   if (typeof name === 'string' && name.trim() && inKorea(lat, lng)) {
+    const cat = [node.category, node.categoryName, node.placeCategory, node.bizCategory, node.categoryPath]
+      .flat()
+      .filter((v) => typeof v === 'string' && v.trim())
+      .join(' ')
+      .trim();
     out.push({
       name: name.trim(),
       address: String(node.address || node.roadAddress || node.addr || '').trim(),
       lat: +lat.toFixed(6),
       lng: +lng.toFixed(6),
+      ...(cat ? { pc: cat } : {}),
     });
     return;
   }
@@ -272,7 +287,59 @@ async function fetchPostPlaces(blogId, link) {
     headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36' },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return extractPlaces(await res.text());
+  const html = await res.text();
+  // 대표 사진: og:image → 본문 첫 사진 (RSS 에서 밀려난 옛 글용)
+  const og = html.match(/property=["']og:image["'][^>]*content=["']([^"']+)/i);
+  const img = html.match(/https:\/\/(?:postfiles|blogfiles)\.pstatic\.net\/[^"'\s?]+/);
+  return { places: extractPlaces(html), thumb: og ? https(decodeAttr(og[1])) : img ? `${img[0]}?type=w580` : '' };
+}
+
+// RSS 는 최근 50개 글만 준다. 블로그 글 목록을 처음부터 끝까지 훑어 옛 글도 지도에 넣는다.
+async function fetchAllPosts(blogId) {
+  const out = [];
+  for (let page = 1; page <= 100; page++) {
+    const url = `https://blog.naver.com/PostTitleListAsync.naver?blogId=${blogId}&viewdate=&currentPage=${page}&categoryNo=0&parentCategoryNo=0&countPerPage=30`;
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(20000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36', Referer: `https://blog.naver.com/${blogId}` },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = JSON.parse((await res.text()).replace(/\\'/g, "'"));
+    const list = d.postList || [];
+    for (const p of list) {
+      let title = String(p.title || '');
+      try { title = decodeURIComponent(title.replace(/\+/g, ' ')); } catch {}
+      const m = String(p.addDate || '').match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})/);
+      out.push({
+        link: `https://blog.naver.com/${blogId}/${p.logNo}`,
+        title: decodeAttr(title).trim(),
+        date: m ? `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}` : '',
+      });
+    }
+    if (list.length < 30 || out.length >= +(d.totalCount || 0)) break;
+    await sleep(300);
+  }
+  return out;
+}
+
+// 핀 종류: 음식점·카페 = 'food'(맛집), 나머지 = 'hot'(핫플)
+const FOOD = /음식|식당|베이글|바게트|페스츄리|패스츄리|로스터리|로스팅|브루잉|아라비카|찻집|다방|티하우스|한식|중식|일식|양식|분식|뷔페|카페|커피|디저트|베이커리|제과|빵|떡|술집|주점|호프|포차|이자카야|와인|칵테일|펍|bar\b|고기|갈비|삼겹|돼지|소고기|한우|곱창|막창|대창|국밥|국수|냉면|밀면|칼국수|수제비|라멘|라면|우동|소바|스시|초밥|오마카세|횟집|회센터|물회|해물|조개|장어|복어|아구|게장|대게|킹크랩|랍스|돈까스|돈카츠|카츠|덮밥|규동|텐동|야키|쿠시|닭|치킨|버거|피자|파스타|스테이크|브런치|타코|쌀국수|마라|훠궈|딤섬|짜장|짬뽕|반점|김밥|떡볶이|순대|족발|보쌈|찜|탕|찌개|전골|샤브|만두|죽|비빔|쌈밥|정식|백반|ラーメン|ramen|sushi|cafe|coffee|bakery|restaurant|bistro|kitchen|dining|grill|brewing|食|屋|亭|鮨|寿司|丼|麺|喫茶|珈琲/i;
+const HOT = /백화점|아울렛|몰|mall|쇼핑|마트|시장|스토어|store|shop|숍|샵|편집|팝업|매장|센터|타워|공원|해수욕장|해변|비치|전망|스카이|박물관|미술관|갤러리|전시|서점|books|tsutaya|테마파크|월드|랜드|파크|park|공항|호텔|리조트|경기장|스타디움|체육|시티|베이스|센터|빌딩|building|百貨店|ストア|ショップ|MITSUKOSHI|PARCO|LOFT|Pokémon|포켓몬/i;
+
+function placeKind(p, postPlaces) {
+  const key = p.name.replace(/\s+/g, '');
+  const hit = Object.keys(CONFIG.placeKinds).find((k) => key.includes(k.replace(/\s+/g, '')));
+  if (hit) return CONFIG.placeKinds[hit] === 'food' ? 'food' : 'hot';
+  if (p.pc) {
+    if (FOOD.test(p.pc)) return 'food';
+    return 'hot';
+  }
+  if (FOOD.test(p.name)) return 'food';
+  if (HOT.test(p.name)) return 'hot';
+  // 이름으로 모르면 글 맥락: 맛집 카테고리 글의 단독 장소는 맛집
+  const ctx = `${p.category || ''} ${p.title || ''}`;
+  if (/맛집|먹|식당|카페|국밥|라멘|뷔페/.test(ctx) && postPlaces <= 3) return 'food';
+  return 'hot';
 }
 
 // 주소 → 좌표 (CONFIG.places 에 좌표 없이 적은 곳만). OpenStreetMap 무료 검색, 결과는 저장해 재사용.
@@ -294,38 +361,62 @@ async function geocode(address, store) {
   return result;
 }
 
+const STORE_V = 2; // 장소 업종(pc)을 읽기 시작한 버전. 옛 버전으로 저장된 글은 한 번 다시 읽는다.
+const MAX_SCAN = 600; // 한 번 실행에 새로 읽는 글 수 상한 (남은 글은 다음 실행 때)
+
 async function buildPlaces(blogs) {
   const store = loadPlaceStore();
   let checked = 0;
   let failed = 0;
+  const queue = [];
   for (const blog of blogs) {
-    for (const it of blog.allItems || []) {
-      const prev = store.posts[it.link];
-      const meta = {
-        blog: blog.id,
-        title: it.title,
-        category: it.category,
-        date: isoDate(it.date),
-        thumb: it.thumb,
-      };
+    // 1) RSS 최근 글: 제목·카테고리·썸네일이 가장 정확하다
+    const seen = new Set();
+    const items = (blog.allItems || []).map((it) => ({
+      link: it.link,
+      meta: { blog: blog.id, title: it.title, category: it.category, date: isoDate(it.date), thumb: it.thumb },
+    }));
+    // 2) 블로그 전체 글 목록 (RSS 에 없는 옛 글)
+    try {
+      const all = await fetchAllPosts(blog.id);
+      store.lists[blog.id] = all.length;
+      for (const p of all) items.push({ link: p.link, meta: { blog: blog.id, title: p.title, date: p.date } });
+    } catch (err) {
+      console.log(`지도 — ${blog.id} 전체 글 목록을 못 읽음 (${err.message}), 최근 글만 확인`);
+    }
+    for (const { link, meta } of items) {
+      if (seen.has(link)) continue;
+      seen.add(link);
+      const prev = store.posts[link];
       if (prev) {
-        Object.assign(prev, meta); // 제목·썸네일이 바뀌었으면 반영
-        continue;
+        // 제목·썸네일이 바뀌었으면 반영 (빈 값으로 덮어쓰지 않음)
+        for (const [k, v] of Object.entries(meta)) if (v) prev[k] = v;
+        if (prev.v === STORE_V) continue;
       }
-      try {
-        const places = await fetchPostPlaces(blog.id, it.link);
-        store.posts[it.link] = { ...meta, places };
-        checked++;
-      } catch {
-        failed++;
-      }
-      await sleep(400);
+      queue.push({ blog, link, meta });
     }
   }
+  for (const { blog, link, meta } of queue.slice(0, MAX_SCAN)) {
+    try {
+      const got = await fetchPostPlaces(blog.id, link);
+      const prev = store.posts[link] || {};
+      store.posts[link] = { category: '', thumb: '', ...prev, ...Object.fromEntries(Object.entries(meta).filter(([, v]) => v)), thumb: prev.thumb || meta.thumb || got.thumb, places: got.places, v: STORE_V };
+      checked++;
+    } catch {
+      failed++;
+    }
+    await sleep(350);
+  }
+  if (queue.length > MAX_SCAN) console.log(`지도 — 남은 글 ${queue.length - MAX_SCAN}개는 다음 실행 때 확인`);
 
   const pins = [];
   for (const [link, post] of Object.entries(store.posts)) {
-    for (const pl of post.places || []) pins.push({ ...pl, name: decodeAttr(pl.name), address: decodeAttr(pl.address || ''), link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb });
+    const n = (post.places || []).length;
+    for (const pl of post.places || []) {
+      const pin = { ...pl, name: decodeAttr(pl.name), address: decodeAttr(pl.address || ''), link, blog: post.blog, title: post.title, category: post.category, date: post.date, thumb: post.thumb };
+      pin.kind = placeKind(pin, n);
+      pins.push(pin);
+    }
   }
   for (const m of CONFIG.places) {
     if (!m?.name) continue;
@@ -335,7 +426,9 @@ async function buildPlaces(blogs) {
       continue;
     }
     const post = store.posts[m.post] || {};
-    pins.push({ name: m.name, address: m.address || '', lat: ll[0], lng: ll[1], link: m.post || '', blog: post.blog || 'kgg8308', title: post.title || m.name, category: post.category || '', date: post.date || '', thumb: post.thumb || '' });
+    const pin = { name: m.name, address: m.address || '', lat: ll[0], lng: ll[1], link: m.post || '', blog: post.blog || 'kgg8308', title: post.title || m.name, category: post.category || '', date: post.date || '', thumb: post.thumb || '' };
+    pin.kind = m.kind === 'food' || m.kind === 'hot' ? m.kind : placeKind(pin, 1);
+    pins.push(pin);
   }
   // 두 블로그에 같은 곳을 올린 경우 핀은 하나만 (맛집 블로그 글 우선, 그다음 최신 글)
   const first = CONFIG.blogs[0].id;
@@ -349,11 +442,12 @@ async function buildPlaces(blogs) {
 
   // 정렬해서 저장 → 내용이 같으면 파일도 같아 불필요한 커밋이 생기지 않는다.
   const sorted = (o) => Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]]));
-  writeFileSync(PLACES_FILE, JSON.stringify({ posts: sorted(store.posts), geocode: sorted(store.geocode) }, null, 1) + '\n', 'utf8');
-  console.log(`지도 — 핀 ${unique.length}개 (새로 확인한 글 ${checked}개${failed ? `, 못 읽은 글 ${failed}개는 다음에 재시도` : ''})`);
+  writeFileSync(PLACES_FILE, JSON.stringify({ lists: sorted(store.lists), posts: sorted(store.posts), geocode: sorted(store.geocode) }, null, 1) + '\n', 'utf8');
+  console.log(`지도 — 핀 ${unique.length}개 (맛집 ${unique.filter((p) => p.kind === 'food').length} · 핫플 ${unique.filter((p) => p.kind !== 'food').length}, 새로 확인한 글 ${checked}개${failed ? `, 못 읽은 글 ${failed}개는 다음에 재시도` : ''})`);
   return unique;
 }
 
+const PIN = { food: '#e03131', hot: '#2f6df6' }; // 맛집 빨강 · 핫플 파랑
 const mapSection = (pins) => `
       <section class="map-wrap" id="map">
         <div class="section-head">
@@ -361,10 +455,15 @@ const mapSection = (pins) => `
           <p>직접 다녀와서 글로 남긴 곳 <strong>${pins.length}</strong>곳. 핀을 누르면 리뷰로 이어집니다.</p>
         </div>
         <div class="map-box">
+          <div class="map-legend" role="group" aria-label="지도 표시 선택">
+            <button type="button" data-k="all" aria-pressed="true">전체 <b>${pins.length}</b></button>
+            <button type="button" data-k="food" aria-pressed="false"><span class="lg-dot" style="--pc:${PIN.food}"></span>맛집 <b>${pins.filter((p) => p.kind === 'food').length}</b></button>
+            <button type="button" data-k="hot" aria-pressed="false"><span class="lg-dot" style="--pc:${PIN.hot}"></span>핫플 <b>${pins.filter((p) => p.kind !== 'food').length}</b></button>
+          </div>
           <div id="placemap" class="placemap" role="region" aria-label="맛집·핫플 지도"><span class="map-loading">지도를 불러오는 중…</span></div>
         </div>
         <script type="application/json" id="place-data">${JSON.stringify(
-          pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, t: p.title, c: p.category, d: p.date, i: p.thumb })),
+          pins.map((p) => ({ n: p.name, a: p.address, y: p.lat, x: p.lng, l: p.link, b: p.blog, k: p.kind === 'food' ? 'food' : 'hot', t: p.title, c: p.category, d: p.date, i: p.thumb })),
         ).replace(/</g, '\\u003c')}</script>
       </section>`;
 
@@ -639,6 +738,19 @@ a { color: inherit; text-decoration: none; }
 }
 .placemap { height: clamp(380px, 62vh, 560px); width: 100%; background: #dfe7ec; display: grid; place-items: center; z-index: 0; }
 .map-loading { font-size: 13px; color: #6b7280; }
+.map-legend {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 500;
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: rgba(255,255,255,.94); box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.map-legend button {
+  font: 600 13px/1 inherit; color: #374151; background: none; border: 0; cursor: pointer;
+  padding: 8px 12px; border-radius: 999px; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.map-legend button b { font-weight: 800; color: #17191c; }
+.map-legend button[aria-pressed="true"] { background: #17191c; color: #fff; }
+.map-legend button[aria-pressed="true"] b { color: #fff; }
+.lg-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pc); box-shadow: 0 0 0 2px #fff; }
 .pin {
   width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
   background: var(--pc); transform: rotate(-45deg);
@@ -658,6 +770,7 @@ a { color: inherit; text-decoration: none; }
 .pop-img { display: block; aspect-ratio: 16 / 9; background: #eee; overflow: hidden; }
 .pop-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pop-body { display: grid; gap: 3px; padding: 11px 13px 13px; }
+.pop-kind { font-size: 11.5px; font-weight: 800; color: var(--pc); letter-spacing: .02em; }
 .pop-name { font-weight: 800; font-size: 15px; letter-spacing: -0.02em; }
 .pop-addr { font-size: 12px; color: #6b7280; }
 .pop-title { font-size: 12.5px; color: #374151; margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -900,7 +1013,7 @@ ${pins.length ? `<script>
 (function () {
   var box = document.getElementById('placemap');
   if (!box) return;
-  var ACCENT = ${JSON.stringify(blogAccent)};
+  var PIN = ${JSON.stringify(PIN)};
   var started = false;
   function css(href) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); }
   function js(src) { return new Promise(function (ok, no) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
@@ -920,22 +1033,35 @@ ${pins.length ? `<script>
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    var layers = { food: [], hot: [] };
     var group = L.markerClusterGroup({
       showCoverageOnHover: false, maxClusterRadius: 46,
       iconCreateFunction: function (c) { return L.divIcon({ html: '<div class="pin-cluster">' + c.getChildCount() + '</div>', className: '', iconSize: [40, 40] }); }
     });
     data.forEach(function (p) {
-      var c = ACCENT[p.b] || '#e4572e';
+      var c = PIN[p.k] || PIN.hot;
       var icon = L.divIcon({ html: '<div class="pin" style="--pc:' + c + '"></div>', className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
       var html = '<a class="pop" style="--pc:' + c + '" href="' + e(p.l) + '" target="_blank" rel="noopener">' +
-        (p.i ? '<span class="pop-img"><img src="' + e(p.i) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>' : '') +
-        '<span class="pop-body"><span class="pop-name">' + e(p.n) + '</span>' +
+        (p.i ? '<span class="pop-img"><img src="' + e(p.i) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>' : '') +
+        '<span class="pop-body"><span class="pop-kind">' + (p.k === 'food' ? '맛집' : '핫플') + '</span><span class="pop-name">' + e(p.n) + '</span>' +
         (p.a ? '<span class="pop-addr">' + e(p.a) + '</span>' : '') +
         (p.t && p.t !== p.n ? '<span class="pop-title">' + e(p.t) + '</span>' : '') +
         (p.l ? '<span class="pop-cta">리뷰 보기 &rarr;</span>' : '') + '</span></a>';
-      group.addLayer(L.marker([p.y, p.x], { icon: icon, title: p.n, alt: p.n }).bindPopup(html, { maxWidth: 260 }));
+      var mk = L.marker([p.y, p.x], { icon: icon, title: p.n, alt: p.n }).bindPopup(html, { maxWidth: 260 });
+      (layers[p.k] || layers.hot).push(mk);
     });
+    group.addLayers(layers.food.concat(layers.hot));
     map.addLayer(group);
+    // 범례 버튼: 전체 / 맛집만 / 핫플만
+    var btns = document.querySelectorAll('.map-legend button');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-k');
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        group.clearLayers();
+        group.addLayers(k === 'all' ? layers.food.concat(layers.hot) : layers[k]);
+      });
+    });
     if (data.length) map.fitBounds(group.getBounds(), { padding: [36, 36], maxZoom: 14 });
     // PC: 지도를 한 번 클릭해야 마우스 휠 확대가 켜진다 (페이지 스크롤이 지도에 걸리지 않게).
     map.once('focus click', function () { map.scrollWheelZoom.enable(); });
