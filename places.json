@@ -1,7 +1,7 @@
 {
  "lists": {
   "kgg8308": 2185,
-  "sexpo15": 226
+  "sexpo15": 227
  },
  "posts": {
   "https://blog.naver.com/kgg8308/110067697939": {
@@ -36385,6 +36385,28 @@
    "title": "HP HyperX 오멘 16-ap1085AX, 고성능 게이밍 노트북 고민 끝",
    "date": "2026-10-26",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/sexpo15/224454249094": {
+   "category": "패션 기타",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMjZfMTI5/MDAxNzkyOTkzNTIyNjcw.GRQ3OX500AuhDd0BVjAs59l32rrhfFgTyLIITwBRxWYg.vsdas9mdK7OYCjH7BfSRanYZLw03h9wt76NezLjZGWEg.JPEG/IMG%A3%DF0920.jpg?type=s3",
+   "blog": "sexpo15",
+   "title": "내돈내산 로맨틱무브 플래그십 방문 및 구매기",
+   "date": "2026-10-27",
+   "places": [
+    {
+     "name": "로맨틱무브 성수 플래그쉽 스토어",
+     "address": "서울특별시 성동구 성수이로18길 36 1층",
+     "lat": 37.541572,
+     "lng": 127.060845
+    },
+    {
+     "name": "로맨틱무브 본사",
+     "address": "서울특별시 성동구 아차산로11가길 36 3층",
+     "lat": 37.545052,
+     "lng": 127.063899
+    }
+   ],
    "v": 2
   }
  },
