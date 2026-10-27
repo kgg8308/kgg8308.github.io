@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2185,
+  "kgg8308": 2186,
   "sexpo15": 227
  },
  "posts": {
@@ -33412,6 +33412,22 @@
      "address": "대전광역시 서구 문정로 40 3층 BCC킹덤",
      "lat": 36.346426,
      "lng": 127.384063
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224455412695": {
+   "category": "부산맛집(해운대이외)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMjdfMzQg/MDAxNzkzMDc5MTczMTE2.hB3FZvhBr65m8DR5VdWee-5tRqL67BvHehYeF2vMAyEg.5IHtj5wiLHhJYVk39xKxaEHh_Lq0Hkm_fnwlDe3jXIUg.JPEG/IMG%A3%DF0946.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "서면 라멘 맛집 류센소 전포동, 그리고 이치란라멘",
+   "date": "2026-10-27",
+   "places": [
+    {
+     "name": "류센소",
+     "address": "부산광역시 부산진구 서전로58번길 116-1 116, 1층",
+     "lat": 35.152594,
+     "lng": 129.066091
     }
    ],
    "v": 2
