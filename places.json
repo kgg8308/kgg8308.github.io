@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2186,
+  "kgg8308": 2187,
   "sexpo15": 227
  },
  "posts": {
@@ -32444,7 +32444,7 @@
    "thumb": "https://ssl.pstatic.net/static/blog/icon/og_270x270.png",
    "blog": "kgg8308",
    "title": "아이폰18 폴더블 아이폰 특징 예상 가격",
-   "date": "2026-09-01",
+   "date": "2026-09-02",
    "places": [],
    "v": 2
   },
@@ -33428,6 +33428,22 @@
      "address": "부산광역시 부산진구 서전로58번길 116-1 116, 1층",
      "lat": 35.152594,
      "lng": 129.066091
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224456848891": {
+   "category": "맛집,카페 (서울경기)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMjhfNjIg/MDAxNzkzMTQ5OTY5MjEy.S6w8pKGAfqUn9A6RjtIoIb7axb0YWIRoal1pB7uZpM8g.OPgthF4_pxb6tuAI22x9wDwDaCMkOoLuhcG76eo-rG8g.JPEG/IMG%A3%DF0615.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "왕십리제일곱창..... 조선 제일의 곱창.... 본점이다.",
+   "date": "2026-10-28",
+   "places": [
+    {
+     "name": "제일곱창 본점",
+     "address": "서울특별시 성동구 고산자로 281 1층 제일곱창",
+     "lat": 37.56487,
+     "lng": 127.036164
     }
    ],
    "v": 2
