@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2188,
+  "kgg8308": 2190,
   "sexpo15": 227
  },
  "posts": {
@@ -32469,7 +32469,7 @@
    "thumb": "https://blogthumb.pstatic.net/MjAyNjA5MDJfMjk0/MDAxNzg4MzI4NzIzNzMz.gzTrXMrBlEQefAZJxxEbHVllODn1fw28n7RXW-qpYMcg.aVP0UcNbQDskQ6yWw5V_gDHawbzFO0POJdrnX3MidwMg.JPEG/IMG%A3%DF5452.jpg?type=s3",
    "blog": "kgg8308",
    "title": "스탠다드 프로덕트 텐진 미츠코시백화점, 맛집 부타매니아동",
-   "date": "2026-09-02",
+   "date": "2026-09-03",
    "places": [
     {
      "name": "Standard Products Lachic Fukuoka Tenjin store",
@@ -33455,6 +33455,50 @@
    "title": "최불암 별세, 향년 87세",
    "date": "2026-10-29",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224460167069": {
+   "category": "백화점, 아울렛 팝업 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMzFfMjQ2/MDAxNzkzNDI2Nzg1ODEy.MZIe0une_Y07sL6Tazs4H-qr4-uF7u7xLgyisX2V2vUg.64wHbuUMV-ttrrWffZDnqinZabC5sEdbvbuAGrBMtpQg.JPEG/IMG%A3%DF1745.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "롯데백화점 부산본점 대박터짐... 용산을 안가도 된다. 팬덤스페이스, 닌텐도, 애니메이트 등등",
+   "date": "2026-10-31",
+   "places": [
+    {
+     "name": "팬덤스페이스 롯데백화점부산본점",
+     "address": "부산광역시 부산진구 가야대로 772 롯데백화점부산본점 지하1층",
+     "lat": 35.156666,
+     "lng": 129.056056
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224460267484": {
+   "category": "백화점, 아울렛 팝업 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMzFfNjQg/MDAxNzkzNDMzOTE1NTAx.uEoAI6lDPl0rDH1BzXSBZeRM0490UXrX5Dr3Tgfp7nsg.7MJ8oqVVZ7hHRmTOVLWfJyoEVf55G6AUGbRCg-Tu59og.JPEG/IMG%A3%DF1765.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "팬덤스페이스 PART2 애니메이트, 피규어 샵 등",
+   "date": "2026-10-31",
+   "places": [
+    {
+     "name": "롯데백화점 부산본점",
+     "address": "부산광역시 부산진구 가야대로 772",
+     "lat": 35.156825,
+     "lng": 129.056431
+    },
+    {
+     "name": "팬덤스페이스 롯데백화점부산본점",
+     "address": "부산광역시 부산진구 가야대로 772 롯데백화점부산본점 지하1층",
+     "lat": 35.156666,
+     "lng": 129.056056
+    },
+    {
+     "name": "애니메이트 부산점",
+     "address": "부산광역시 부산진구 가야대로 772",
+     "lat": 35.156815,
+     "lng": 129.055487
+    }
+   ],
    "v": 2
   },
   "https://blog.naver.com/sexpo15/223437629849": {
