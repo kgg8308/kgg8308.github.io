@@ -1,7 +1,7 @@
 {
  "lists": {
   "kgg8308": 2190,
-  "sexpo15": 228
+  "sexpo15": 229
  },
  "posts": {
   "https://blog.naver.com/kgg8308/110067697939": {
@@ -36520,6 +36520,15 @@
      "lng": 129.056968
     }
    ],
+   "v": 2
+  },
+  "https://blog.naver.com/sexpo15/224462212793": {
+   "category": "스포츠 러닝 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDJfMTc0/MDAxNzkzNTk0OTI4NjQ5.GUP9-PpKVshnUGocxfQnGqvUObhr-vWwXWQwso-E5mAg.IJCBp4JGxqnH6muSt5aL6pc-JmyjHeAe0IWX1fMlMakg.PNG/IMG%A3%DF1839.PNG?type=s3",
+   "blog": "sexpo15",
+   "title": "윈덤 그랜드 부산 러닝, 그리고 뷔페 브릿지",
+   "date": "2026-11-02",
+   "places": [],
    "v": 2
   }
  },
