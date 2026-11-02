@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2190,
+  "kgg8308": 2191,
   "sexpo15": 229
  },
  "posts": {
@@ -33497,6 +33497,28 @@
      "address": "부산광역시 부산진구 가야대로 772",
      "lat": 35.156815,
      "lng": 129.055487
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224462461589": {
+   "category": "부산맛집(해운대이외)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDJfNjkg/MDAxNzkzNjA1MjI2NTY1.lr8EE_z763aaHVc6wbcy9G7jv-svJ4K9O7xLsdMQfggg.Yvu-bvJef9dPYTfG3jh7jgKXp1J4DIYNwKXNfgfVQ5gg.JPEG/IMG%A3%DF1682.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "윈덤그랜드 부산 뷔페 더브릿지",
+   "date": "2026-11-02",
+   "places": [
+    {
+     "name": "윈덤 그랜드 부산",
+     "address": "부산광역시 서구 등대로 27 윈덤 그랜드 부산",
+     "lat": 35.078484,
+     "lng": 129.024291
+    },
+    {
+     "name": "윈덤 그랜드 부산 더 브릿지",
+     "address": "부산광역시 서구 등대로 27 4층",
+     "lat": 35.078435,
+     "lng": 129.024233
     }
    ],
    "v": 2
