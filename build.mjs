@@ -1008,6 +1008,7 @@ const html = `<!doctype html>
 ${siteUrl ? `<link rel="canonical" href="${esc(siteUrl)}/">` : ''}
 ${CONFIG.verify.naver ? `<meta name="naver-site-verification" content="${esc(CONFIG.verify.naver)}">` : ''}
 ${CONFIG.verify.google ? `<meta name="google-site-verification" content="${esc(CONFIG.verify.google)}">` : ''}
+${siteUrl ? `<link rel="alternate" type="application/rss+xml" title="${esc(CONFIG.siteTitle)}" href="${esc(siteUrl)}/rss.xml">` : ''}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(CONFIG.siteTitle)}">
 <meta property="og:title" content="${esc(CONFIG.siteTitle)}">
@@ -1894,11 +1895,47 @@ ${/^\d{4}-\d{2}-\d{2}$/.test(u.lastmod) ? `    <lastmod>${u.lastmod}</lastmod>\n
     `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
     'utf8',
   );
+
+  // 네이버 서치어드바이저 제출용 RSS — 최근 리뷰가 붙은 장소 페이지 50곳 (모두 이 사이트 안의 주소)
+  const rfc = (d) => { const t = new Date(/^\d{4}-\d{2}-\d{2}$/.test(d || '') ? `${d}T09:00:00+09:00` : d || builtAt); return isNaN(t) ? new Date().toUTCString() : t.toUTCString(); };
+  const feedItems = [...pins]
+    .filter((p) => !p.closed)
+    .sort((a, b) => (b.posts[0]?.date || b.date || '').localeCompare(a.posts[0]?.date || a.date || ''))
+    .slice(0, 50)
+    .map((p) => {
+      const where = p.region?.name ? `${p.region.name} ` : '';
+      const kind = p.kind === 'food' ? '맛집' : '핫플';
+      const reviews = p.posts.slice(0, 3).map((x) => x.title).filter(Boolean).join(' / ');
+      const desc = `${p.name}${p.address ? ` (${p.address})` : ''}. 직접 다녀와서 쓴 리뷰: ${reviews}`;
+      return `    <item>
+      <title>${esc(`${p.name} — ${where}${kind}`)}</title>
+      <link>${esc(abs(placePath(p)))}</link>
+      <guid isPermaLink="true">${esc(abs(placePath(p)))}</guid>
+      <description>${esc(desc.slice(0, 300))}</description>
+      <pubDate>${rfc(p.posts[0]?.date || p.date)}</pubDate>
+    </item>`;
+    });
+  writeFileSync(
+    join(HERE, 'rss.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>${esc(CONFIG.siteTitle)}</title>
+    <link>${esc(siteUrl)}/</link>
+    <description>${esc(metaDesc)}</description>
+    <language>ko</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+${feedItems.join('\n')}
+  </channel>
+</rss>
+`,
+    'utf8',
+  );
 }
 
 for (const b of blogs) {
   console.log(b.ok ? `OK   ${b.name} — 글 ${b.items.length}개` : `실패 ${b.id} — ${b.note}`);
 }
 console.log(`추천 상품 ${livePicks.length}개 노출 (쿠팡 링크 ${CONFIG.coupang.picks.filter((p) => p.link).length}개 / 나머지는 리뷰 글로 연결)`);
-console.log(siteUrl ? `sitemap.xml / robots.txt 생성 (${siteUrl})` : 'siteUrl 비어 있음 → sitemap.xml / robots.txt 생략');
+console.log(siteUrl ? `sitemap.xml / robots.txt / rss.xml 생성 (${siteUrl})` : 'siteUrl 비어 있음 → sitemap.xml / robots.txt 생략');
 console.log(`만들었습니다: ${out}`);
