@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2191,
+  "kgg8308": 2193,
   "sexpo15": 229
  },
  "posts": {
@@ -32540,7 +32540,7 @@
    "thumb": "https://blogthumb.pstatic.net/MjAyNjA5MDZfMTg0/MDAxNzg4NjgyMzUzNDE4.Tyzb4z0HWk8urGnpbsfcMhq9ATvdxl1u9xNQmwypgFIg.4ATx9Bq67b0DN3jvZS79f00W6Oe1rm10Gbob6QGzrGcg.JPEG/IMG%A3%DF8720.jpg?type=s3",
    "blog": "kgg8308",
    "title": "부산맛집 시미포 굿모닝 시락국밥 솔직후기와 고릴라브루잉",
-   "date": "2026-09-06",
+   "date": "2026-09-07",
    "places": [
     {
      "name": "미포 굿모닝 시락국밥",
@@ -33521,6 +33521,31 @@
      "lng": 129.024233
     }
    ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224464812886": {
+   "category": "맛집,카페 (서울경기)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDRfMjU1/MDAxNzkzNzc0NzQzOTI3.PTP-Op-OQiUiGGXhCQgnGrClS0hAbZRecj9GZnUhMMUg._-7cFkGeqI3Da5v3FwJNp4oyVPFbiEbsz0KuUj3medog.JPEG/IMG%A3%DF1947.JPG?type=s3",
+   "blog": "kgg8308",
+   "title": "내돈내산 서울역 맛집 만리재길 맛집 유즈라멘 서울역본점 내돈내산",
+   "date": "2026-11-04",
+   "places": [
+    {
+     "name": "유즈라멘 서울역본점",
+     "address": "서울특별시 중구 만리재로 217",
+     "lat": 37.556841,
+     "lng": 126.968255
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224465046101": {
+   "category": "부산맛집(해운대이외)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDRfMTYx/MDAxNzkzNzg1NDE1Nzkx.fB_YDx6ufthYpTTlQI-eWPEOwTcGMrDBEsdo1li9gMsg.qqLsrKYbh8H51DNokVClQpKo3f-t_xv1btXUFv6e9cYg.JPEG/IMG%A3%DF1962.JPG?type=s3",
+   "blog": "kgg8308",
+   "title": "장안의 화제 맥도날드 빅아치 버거, 존박 버프!!  기간 한정 판매임",
+   "date": "2026-11-04",
+   "places": [],
    "v": 2
   },
   "https://blog.naver.com/sexpo15/223437629849": {
