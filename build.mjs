@@ -653,6 +653,96 @@ const youtubeSection = (yt) => `
         <ul class="videos">${yt.videos.slice(0, yt.count || 6).map(videoCard).join('')}</ul>
       </section>`;
 
+// ── 러닝 리뷰 ────────────────────────────────────────────────
+// 러닝 리뷰 메이커로 만든 이미지를 runs/<id>/01.jpg … 로 넣고, runs.json 에 한 줄 추가하면 나옵니다.
+//   cat: brand(브랜드 리뷰) · daily(일상 러닝) · event(이벤트런)
+//   slides: 장별 제목 (이미지 순서대로). 첫 장은 표지, cover.jpg 는 카드용 작은 표지.
+const RUN_CATS = { brand: '브랜드 리뷰', daily: '일상 러닝', event: '이벤트런' };
+const RUNS_FILE = join(HERE, 'runs.json');
+function loadRuns() {
+  try {
+    const list = JSON.parse(readFileSync(RUNS_FILE, 'utf8'));
+    return list
+      .filter((r) => r && r.id && RUN_CATS[r.cat] && Array.isArray(r.slides) && r.slides.length && existsSync(join(HERE, 'runs', r.id, '01.jpg')))
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  } catch {
+    return [];
+  }
+}
+const runCard = (r) => {
+  const base = `runs/${encodeURIComponent(r.id)}/`;
+  const cover = existsSync(join(HERE, 'runs', r.id, 'cover.jpg')) ? 'cover.jpg' : '01.jpg';
+  const slides = r.slides.map((t, i) => ({ src: base + String(i + 1).padStart(2, '0') + '.jpg', t }));
+  return `
+          <li class="run" data-cat="${esc(r.cat)}">
+            <button type="button" class="run-open" data-slides="${esc(JSON.stringify(slides))}" data-title="${esc(r.title)}" aria-label="${esc(r.title)} 리뷰 ${slides.length}장 보기">
+              <span class="run-thumb">
+                <img src="${base + cover}" alt="" loading="lazy" decoding="async" width="540" height="675">
+                <span class="run-count">${slides.length}장</span>
+              </span>
+              <span class="run-cat">${esc(RUN_CATS[r.cat])}</span>
+              <span class="run-title">${esc(r.title)}</span>
+              <span class="run-meta">${esc([dotDate(r.date), r.place, r.credit].filter(Boolean).join(' · '))}</span>
+            </button>
+          </li>`;
+};
+const runsSection = (runs) => {
+  const cats = Object.keys(RUN_CATS).filter((c) => runs.some((r) => r.cat === c));
+  return `
+      <section class="runs-wrap" id="runs">
+        <div class="section-head section-head-row">
+          <div>
+            <h2>러닝 리뷰</h2>
+            <p>부산을 달리며 남긴 기록. 브랜드 리뷰, 일상 러닝, 이벤트런.</p>
+          </div>
+          <a class="run-insta" href="https://www.instagram.com/slowandsteadyboy/" target="_blank" rel="noopener">@slowandsteadyboy</a>
+        </div>
+        <div class="run-filters" role="group" aria-label="러닝 리뷰 종류">
+          <button type="button" data-run-filter="all" aria-pressed="true">전체 ${runs.length}</button>
+${cats.map((c) => `          <button type="button" data-run-filter="${c}" aria-pressed="false">${esc(RUN_CATS[c])} ${runs.filter((r) => r.cat === c).length}</button>`).join('\n')}
+        </div>
+        <ul class="runs">${runs.map(runCard).join('')}</ul>
+        <dialog class="run-viewer" id="run-viewer" aria-label="러닝 리뷰 보기">
+          <div class="rv-head"><b class="rv-title"></b><span class="rv-pos"></span><button type="button" class="rv-close" aria-label="닫기">✕</button></div>
+          <div class="rv-track" tabindex="0"></div>
+          <div class="rv-nav"><button type="button" class="rv-prev" aria-label="이전 장">‹</button><span class="rv-cap"></span><button type="button" class="rv-next" aria-label="다음 장">›</button></div>
+        </dialog>
+      </section>`;
+};
+const RUNS_JS = `<script>
+(function () {
+  var wrap = document.getElementById('runs'); if (!wrap) return;
+  wrap.querySelectorAll('[data-run-filter]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-run-filter');
+      wrap.querySelectorAll('[data-run-filter]').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      wrap.querySelectorAll('.run').forEach(function (li) { li.hidden = f !== 'all' && li.getAttribute('data-cat') !== f; });
+    });
+  });
+  var dlg = document.getElementById('run-viewer'), track = dlg.querySelector('.rv-track');
+  var pos = dlg.querySelector('.rv-pos'), cap = dlg.querySelector('.rv-cap'), cur = [], idx = 0;
+  function show(i) { idx = Math.max(0, Math.min(cur.length - 1, i)); pos.textContent = (idx + 1) + ' / ' + cur.length; cap.textContent = cur[idx].t; }
+  function go(i) { var w = track.clientWidth; track.scrollTo({ left: Math.max(0, Math.min(cur.length - 1, i)) * w, behavior: 'smooth' }); }
+  track.addEventListener('scroll', function () { var w = track.clientWidth || 1; var i = Math.round(track.scrollLeft / w); if (i !== idx) show(i); }, { passive: true });
+  dlg.querySelector('.rv-prev').onclick = function () { go(idx - 1); };
+  dlg.querySelector('.rv-next').onclick = function () { go(idx + 1); };
+  dlg.querySelector('.rv-close').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') go(idx + 1); if (e.key === 'ArrowLeft') go(idx - 1); });
+  wrap.querySelectorAll('.run-open').forEach(function (b) {
+    b.addEventListener('click', function () {
+      try { cur = JSON.parse(b.getAttribute('data-slides')) || []; } catch (e) { cur = []; }
+      if (!cur.length) return;
+      dlg.querySelector('.rv-title').textContent = b.getAttribute('data-title');
+      track.innerHTML = '';
+      cur.forEach(function (s, i) { var f = document.createElement('figure'); var im = document.createElement('img'); im.src = s.src; im.alt = s.t; im.loading = i < 2 ? 'eager' : 'lazy'; f.appendChild(im); track.appendChild(f); });
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      track.scrollLeft = 0; show(0); track.focus();
+    });
+  });
+})();
+</script>`;
+
 // 지역·장소 페이지가 같이 쓰는 스타일 (site.css 로 저장)
 const SITE_CSS = `:root {
   color-scheme: light;
@@ -951,6 +1041,7 @@ const builtAt = new Date();
 const pins = await buildPlaces(blogs);
 const blogAccent = Object.fromEntries(CONFIG.blogs.map((b) => [b.id, b.accent]));
 const yt = await loadYoutube(CONFIG.youtube);
+const runs = loadRuns();
 
 // 장소 → 지역 묶기. 주소에서 시·도 + 시·군·구를 읽는다.
 const regionMap = new Map();
@@ -1303,6 +1394,36 @@ section[id] { scroll-margin-top: 72px; }
 .video-title { font-size: 14px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .video-date { font-size: 12px; color: var(--faint); margin-top: -4px; }
 @media (max-width: 760px) { .videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.runs-wrap { padding: 34px 0 6px; }
+.run-insta { margin-left: auto; flex: none; padding: 9px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 13.5px; font-weight: 700; }
+.run-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+.run-filters button { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; padding: 7px 13px; border-radius: 999px; cursor: pointer; }
+.run-filters button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.runs { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px 14px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.run[hidden] { display: none; }
+.run-open { appearance: none; border: 0; background: none; padding: 0; margin: 0; width: 100%; text-align: left; color: inherit; font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+.run-thumb { position: relative; display: block; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--line); box-shadow: var(--shadow); }
+.run-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
+.run-open:hover .run-thumb img { transform: scale(1.03); }
+.run-open:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 14px; }
+.run-count { position: absolute; right: 8px; top: 8px; padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,.65); color: #fff; font-size: 11px; font-weight: 700; }
+.run-cat { font-size: 11.5px; font-weight: 700; color: #2f5bff; margin-top: 4px; }
+.run-title { font-size: 14px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.run-meta { font-size: 12px; color: var(--faint); }
+.run-viewer { width: min(560px, 100vw); max-width: 100vw; max-height: 100dvh; padding: 0; border: 0; border-radius: 16px; background: #0e1116; color: #fff; overflow: hidden; }
+.run-viewer::backdrop { background: rgba(8, 10, 14, .8); }
+.rv-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+.rv-title { font-size: 14px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rv-pos { font-size: 12px; color: rgba(255,255,255,.7); font-variant-numeric: tabular-nums; }
+.rv-close { appearance: none; border: 0; background: rgba(255,255,255,.12); color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; cursor: pointer; }
+.rv-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; outline: none; }
+.rv-track::-webkit-scrollbar { display: none; }
+.rv-track figure { flex: 0 0 100%; margin: 0; scroll-snap-align: start; }
+.rv-track img { display: block; width: 100%; height: auto; max-height: calc(100dvh - 120px); object-fit: contain; background: #000; }
+.rv-nav { display: flex; align-items: center; gap: 10px; padding: 10px 14px 14px; }
+.rv-nav button { appearance: none; border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; flex: none; }
+.rv-cap { flex: 1; text-align: center; font-size: 13px; color: rgba(255,255,255,.85); }
+@media (max-width: 760px) { .runs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .run-insta { display: none; } .run-viewer { border-radius: 0; } }
 
 /* 블로그 패널 */
 .blogs { margin-top: 56px; display: grid; gap: 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1438,6 +1559,7 @@ footer {
       ${pins.length ? '<a href="#map">지도</a>' : ''}
       ${regions.length ? '<a href="#regions">지역</a>' : ''}
       ${yt?.videos.length ? '<a href="#videos">영상</a>' : ''}
+      ${runs.length ? '<a href="#runs">러닝</a>' : ''}
 ${blogs.map((b) => `      <a href="#${esc(b.id)}">${esc(b.kicker)}</a>`).join('\n')}
     </nav>
     <div class="visits" aria-label="방문자 수">
@@ -1461,6 +1583,7 @@ ${livePicks.length ? picksSection(livePicks) : ""}
 ${pins.length ? mapSection(pins) : ''}
 ${regions.length ? regionsSection(regions) : ''}
 ${yt?.videos.length ? youtubeSection(yt) : ''}
+${runs.length ? runsSection(runs) : ''}
 
     <div class="blogs">
 ${blogs.map((b) => blogPanel(b).replace('<section class="panel"', `<section class="panel" id="${esc(b.id)}"`)).join('\n')}
@@ -1565,6 +1688,7 @@ ${pins.length ? `<script>
   });
 })();
 </script>
+${runs.length ? RUNS_JS : ''}
 
 </body>
 </html>
