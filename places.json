@@ -1,7 +1,7 @@
 {
  "lists": {
-  "kgg8308": 2193,
-  "sexpo15": 229
+  "kgg8308": 2194,
+  "sexpo15": 230
  },
  "posts": {
   "https://blog.naver.com/kgg8308/110067697939": {
@@ -33548,6 +33548,22 @@
    "places": [],
    "v": 2
   },
+  "https://blog.naver.com/kgg8308/224465644875": {
+   "category": "부산맛집(해운대이외)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDVfNzkg/MDAxNzkzODQwNjkwNDE3.clHbwFb2joimLEha3k7QjATvtfcMlPEl_s753Stnxicg.8X2UBViA8cjp4NP3K51swuPpDjmsDZT1GAeqUkKG9Ukg.JPEG/IMG%A3%DF1972.JPG?type=s3",
+   "blog": "kgg8308",
+   "title": "수영 숯불구이 맛집 대박통 수영점, 수조에서 꺼낸 통문어구이 후기",
+   "date": "2026-11-05",
+   "places": [
+    {
+     "name": "대박통 수영점",
+     "address": "부산광역시 수영구 수영로680번길 28 1층 대박통",
+     "lat": 35.166148,
+     "lng": 129.11649
+    }
+   ],
+   "v": 2
+  },
   "https://blog.naver.com/sexpo15/223437629849": {
    "category": "",
    "thumb": "https://ssl.pstatic.net/static/blog/icon/og_270x270.png",
@@ -36576,6 +36592,28 @@
    "title": "윈덤 그랜드 부산 러닝, 그리고 뷔페 브릿지",
    "date": "2026-11-02",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/sexpo15/224465911045": {
+   "category": "스포츠 러닝 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDVfMjU3/MDAxNzkzODUzNTg3OTAy.PmQI9kV7C-S2gXzkeVbBhPOscX6Nfn6jZiqY-Dffqugg.sIllFfY4TNKMy1tuSIX6YdCEWJ5SLQpxti0znXkDBUog.PNG/image.png?type=s3",
+   "blog": "sexpo15",
+   "title": "롯데몰동부산 나이키 클리어런스 세일",
+   "date": "2026-11-05",
+   "places": [
+    {
+     "name": "롯데프리미엄아울렛 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147",
+     "lat": 35.192052,
+     "lng": 129.212769
+    },
+    {
+     "name": "나이키 롯데몰동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147 롯데몰동부산점 1F",
+     "lat": 35.192718,
+     "lng": 129.211778
+    }
+   ],
    "v": 2
   }
  },
