@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kgg8308.github.io/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://kgg8308.github.io/region/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -32,7 +32,7 @@
   </url>
   <url>
     <loc>https://kgg8308.github.io/region/%EB%B6%80%EC%82%B0-%EA%B8%B0%EC%9E%A5%EA%B5%B0/</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -457,6 +457,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kgg8308.github.io/place/%EB%A1%AF%EB%8D%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%EC%95%84%EC%9A%B8%EB%A0%9B-%EB%8F%99%EB%B6%80%EC%82%B0%EC%A0%90-2ce7/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://kgg8308.github.io/place/%EB%8C%80%EB%B0%95%ED%86%B5-%EC%88%98%EC%98%81%EC%A0%90-303e/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -525,12 +531,6 @@
   <url>
     <loc>https://kgg8308.github.io/place/%EB%A1%9C%EB%A7%A8%ED%8B%B1%EB%AC%B4%EB%B8%8C-%EB%B3%B8%EC%82%AC-d63e/</loc>
     <lastmod>2026-10-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://kgg8308.github.io/place/%EB%A1%AF%EB%8D%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%EC%95%84%EC%9A%B8%EB%A0%9B-%EB%8F%99%EB%B6%80%EC%82%B0%EC%A0%90-2ce7/</loc>
-    <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

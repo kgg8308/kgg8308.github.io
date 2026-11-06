@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2194,
+  "kgg8308": 2195,
   "sexpo15": 230
  },
  "posts": {
@@ -33560,6 +33560,22 @@
      "address": "부산광역시 수영구 수영로680번길 28 1층 대박통",
      "lat": 35.166148,
      "lng": 129.11649
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224466930245": {
+   "category": "백화점, 아울렛 팝업 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDZfMTYy/MDAxNzkzOTI4NDQ5Mjc4.6qSZRYNC7io08cEq_W2yxhjYVRhWgcUGg_AkXn60M0cg.tMvJpePmDG64mXlP5bC40Oe8gcVAMiwdKCMmYvuBaAUg.JPEG/IMG%A3%DF1992.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "롯데몰동부산 롯데프리미엄아울렛 동부산 나이키 빅세일 빈폴 세일. 서프라이즈위크",
+   "date": "2026-11-06",
+   "places": [
+    {
+     "name": "롯데프리미엄아울렛 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147",
+     "lat": 35.192052,
+     "lng": 129.212769
     }
    ],
    "v": 2
