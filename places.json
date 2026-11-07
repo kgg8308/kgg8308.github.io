@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2195,
+  "kgg8308": 2196,
   "sexpo15": 230
  },
  "posts": {
@@ -33576,6 +33576,22 @@
      "address": "부산광역시 기장군 기장읍 기장해안로 147",
      "lat": 35.192052,
      "lng": 129.212769
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224468366614": {
+   "category": "백화점, 아울렛 팝업 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDdfOTcg/MDAxNzk0MDM1MTkyNDM3.dsm2QEu2j-8RYfsJk9oiPcgPnPm88_ZMcpiJCuQYSg0g.pZCp1U3x0ufgccCuLmFoIPFUBuvA5Xtt5QhwUo7b9Twg.JPEG/IMG%A3%DF2217.JPG?type=s3",
+   "blog": "kgg8308",
+   "title": "더현대 서울 팝업 총정리, 노스페이스 화이트라벨, 하이록스 푸마",
+   "date": "2026-11-07",
+   "places": [
+    {
+     "name": "현대백화점 더현대 서울",
+     "address": "서울특별시 영등포구 여의대로 108 더현대 서울",
+     "lat": 37.52599,
+     "lng": 126.928382
     }
    ],
    "v": 2
