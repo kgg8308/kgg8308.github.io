@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2196,
+  "kgg8308": 2197,
   "sexpo15": 230
  },
  "posts": {
@@ -33592,6 +33592,34 @@
      "address": "서울특별시 영등포구 여의대로 108 더현대 서울",
      "lat": 37.52599,
      "lng": 126.928382
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224469026783": {
+   "category": "유통(백화점,핫플)백서",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDhfNzcg/MDAxNzk0MTA0OTgzNjk1.t7VXf12WvdgTcr4fqeeGZBAUtL_Y4UQFbt1cTX5zMV0g.Dj-aJbW0ebjOMXgO-3sOJxoRQQPacCBfs9NfczEk6vYg.PNG/image.png?type=s3",
+   "blog": "kgg8308",
+   "title": "유니클로 겨울준비 특별가격 11월 12일까지, PUFFTECH 파카 69,900원 할인 정리",
+   "date": "2026-11-08",
+   "places": [
+    {
+     "name": "롯데프리미엄아울렛 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147",
+     "lat": 35.192052,
+     "lng": 129.212769
+    },
+    {
+     "name": "유니클로 롯데몰 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147 롯데몰동부산점 1~2층",
+     "lat": 35.192217,
+     "lng": 129.212772
+    },
+    {
+     "name": "유니클로 롯데프리미엄아울렛동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147 롯데몰동부산 2F",
+     "lat": 35.190916,
+     "lng": 129.21319
     }
    ],
    "v": 2
