@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2198,
+  "kgg8308": 2193,
   "sexpo15": 230
  },
  "posts": {
@@ -33631,6 +33631,22 @@
    "title": "부산 불꽃축제 2026 광안리 불꽃축제",
    "date": "2026-11-08",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224470786987": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDlfNDgg/MDAxNzk0MjI2MTYwMjcx.oNQLjMqYRHcxOumTqMl6ogxJm3N7ZTg5RdM-KSsJC3Ag.E6MzSlT_0KLS63_7FeFGYb4Yc1YrmxGim3H7uITytPwg.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래 맛집 솥돈 문래점, 솥판에 굽는 숙성 생삼겹 내돈내산 후기",
+   "date": "2026-11-09",
+   "places": [
+    {
+     "name": "솥돈 문래점",
+     "address": "서울특별시 영등포구 도림로 434-4 1층",
+     "lat": 37.514536,
+     "lng": 126.895044
+    }
+   ],
    "v": 2
   },
   "https://blog.naver.com/sexpo15/223437629849": {
