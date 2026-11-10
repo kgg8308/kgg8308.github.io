@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2193,
+  "kgg8308": 2194,
   "sexpo15": 230
  },
  "posts": {
@@ -33645,6 +33645,22 @@
      "address": "서울특별시 영등포구 도림로 434-4 1층",
      "lat": 37.514536,
      "lng": 126.895044
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224470792750": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDlfMjYz/MDAxNzk0MjI2NTM5NDIz.694HWQoosaqUjy4YsJ6wn2w-vy1rr3o9-6ZKGFvyOMAg.mdgeYWYLhUoiKondqF8EXFRIzb7u6H3OGv88yBQAzv0g.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래 술집 잊힐리야 내돈내산 후기, 오픈부터 자리 차는 이유",
+   "date": "2026-11-10",
+   "places": [
+    {
+     "name": "잊힐리야",
+     "address": "서울특별시 영등포구 도림로125길 34 1층(잊힐리야)",
+     "lat": 37.513286,
+     "lng": 126.892993
     }
    ],
    "v": 2
