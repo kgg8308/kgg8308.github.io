@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2198,
+  "kgg8308": 2199,
   "sexpo15": 231
  },
  "posts": {
@@ -33709,6 +33709,28 @@
      "address": "서울특별시 영등포구 경인로79길 20-1 1층",
      "lat": 37.51359,
      "lng": 126.893385
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224470820728": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDlfMjM5/MDAxNzk0MjI4MTQ1NjA3.h3KX8U7EZC2w_kQ4j12tqqYc111wXDV4RjXsA0Rcb_og.trqlic1nyLVyBBB1E0FvTIpa0s2_N8SFhGoAWi1YNAUg.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래창작촌 맛집 베르데, 브런치와 펍을 한 번에 즐기는 대형 카페",
+   "date": "2026-11-13",
+   "places": [
+    {
+     "name": "베르데 문래",
+     "address": "서울특별시 영등포구 도림로139가길 5 1층",
+     "lat": 37.513944,
+     "lng": 126.893604
+    },
+    {
+     "name": "베르데커피",
+     "address": "서울특별시 영등포구 도림로139가길 5 1층",
+     "lat": 37.513957,
+     "lng": 126.893614
     }
    ],
    "v": 2
