@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2197,
+  "kgg8308": 2198,
   "sexpo15": 231
  },
  "posts": {
@@ -33693,6 +33693,22 @@
      "address": "서울특별시 영등포구 도림로 440-15 1층 목화원",
      "lat": 37.515079,
      "lng": 126.89458
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224470815028": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMDlfMjQx/MDAxNzk0MjI3NjY1NzEw.jLFhLpmOLwSfFXnRwnfYlAvTMkezctn_eNl6Pq3xlx0g.TwtVlfp0gyUmjax8KwUqc6K_mNwhinTjndBoxEJSmO8g.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래 다소곳 내돈내산 후기, 빠에야와 뽈뽀에 와인 한 잔",
+   "date": "2026-11-13",
+   "places": [
+    {
+     "name": "다소곳",
+     "address": "서울특별시 영등포구 경인로79길 20-1 1층",
+     "lat": 37.51359,
+     "lng": 126.893385
     }
    ],
    "v": 2
