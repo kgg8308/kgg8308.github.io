@@ -1,7 +1,7 @@
 {
  "lists": {
-  "kgg8308": 2174,
-  "sexpo15": 231
+  "kgg8308": 2176,
+  "sexpo15": 232
  },
  "posts": {
   "https://blog.naver.com/kgg8308/110067697939": {
@@ -33057,7 +33057,7 @@
    "thumb": "https://phinf.pstatic.net/image.nmv/blog_2026_10_01_465/kHXm6qPJxJ_03.jpg?type=f480x480",
    "blog": "kgg8308",
    "title": "부산 명물 부캉이, 이별전",
-   "date": "2026-09-30",
+   "date": "2026-10-01",
    "places": [
     {
      "name": "부산항북항 친수공원",
@@ -33079,7 +33079,7 @@
    "thumb": "https://phinf.pstatic.net/image.nmv/blog_2026_10_03_334/8s31KL8qnN_03.jpg?type=f480x480",
    "blog": "kgg8308",
    "title": "내돈내산 정준하 아이스크림 헬레니카 용산 팝업 친절한 사람 hellenika",
-   "date": "2026-10-02",
+   "date": "2026-10-03",
    "places": [
     {
      "name": "아이파크몰 용산점",
@@ -33880,6 +33880,15 @@
    "places": [],
    "v": 2
   },
+  "https://blog.naver.com/kgg8308/224481324740": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMThfMTA5/MDAxNzk0OTM0MzIzMTE2.RgHo5DHwUUc-gk9sVUOsexjb15FAHVFOSpSmqEvuROsg.jzalwilxpCI4kMMMoebfr3oNyfOsWflav4zs58tcf58g.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "영등포구청역 맛집 미문의밤, 곱창부대전골 내돈내산 후기",
+   "date": "2026-11-22",
+   "places": [],
+   "v": 2
+  },
   "https://blog.naver.com/kgg8308/224483905812": {
    "category": "기타",
    "thumb": "https://blogthumb.pstatic.net/MjAyNjExMTlfMTQ0/MDAxNzk1MDkxMzM3MzY3.7XJCXUjflbkFrDeHNnYYintQ9BTnVDc26gCGVZ8LaEkg.IZenk3WYqjWFDBIOAw-7fTkEDz3MFTgfQxpf9xMk-2Ug.PNG/image.png?type=s3",
@@ -33887,6 +33896,22 @@
    "title": "수험표 한 장으로 누리는 혜택 30곳 정리 (2027 수능 끝, 부산 코스·마감 캘린더까지)",
    "date": "2026-11-19",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224487028976": {
+   "category": "백화점, 아울렛 팝업 등",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMjJfMTU2/MDAxNzk1MzI1NDA4MjIy.QWgFe9hMSHRokPBUBiwx8XigH1_wNRXZ6VTVOEe0X-Ig.rxlgLsB5nQjgzMOvgMvuxtT2T4JjKEGcvwg18sHw_Fsg.JPEG/IMG%A3%DF2624.JPG?type=s3",
+   "blog": "kgg8308",
+   "title": "롯데몰동부산 넘버블록과 뉴발란스,, 추우니꺼 어그 UGG",
+   "date": "2026-11-22",
+   "places": [
+    {
+     "name": "롯데프리미엄아울렛 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147",
+     "lat": 35.192052,
+     "lng": 129.212769
+    }
+   ],
    "v": 2
   },
   "https://blog.naver.com/sexpo15/223437629849": {
@@ -36948,6 +36973,22 @@
    "title": "써코니 아주라 리뷰",
    "date": "2026-11-12",
    "places": [],
+   "v": 2
+  },
+  "https://blog.naver.com/sexpo15/224486806306": {
+   "category": "백화점, 아울렛, 쇼핑몰 소식",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMjJfMjQw/MDAxNzk1MzA4OTQ1Mjc5.gNcBjMfjeOHVagmMYFYi9dbvQrnFXVcX6ieQLrGpsDcg.Dh47TqH4oWK3vvZ-KUIcjbRtAZjWyjJHrFC8KZ1W2gkg.JPEG/IMG%A3%DF2624.JPG?type=s3",
+   "blog": "sexpo15",
+   "title": "롯데월드 부산 신규 어트랙션, 롯데아울렛 동부산 넘버블록스와 행사 뉴발란스",
+   "date": "2026-11-22",
+   "places": [
+    {
+     "name": "롯데프리미엄아울렛 동부산점",
+     "address": "부산광역시 기장군 기장읍 기장해안로 147",
+     "lat": 35.192052,
+     "lng": 129.212769
+    }
+   ],
    "v": 2
   }
  },
