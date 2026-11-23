@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2175,
+  "kgg8308": 2176,
   "sexpo15": 232
  },
  "posts": {
@@ -33079,7 +33079,7 @@
    "thumb": "https://phinf.pstatic.net/image.nmv/blog_2026_10_03_334/8s31KL8qnN_03.jpg?type=f480x480",
    "blog": "kgg8308",
    "title": "내돈내산 정준하 아이스크림 헬레니카 용산 팝업 친절한 사람 hellenika",
-   "date": "2026-10-02",
+   "date": "2026-10-03",
    "places": [
     {
      "name": "아이파크몰 용산점",
@@ -33919,6 +33919,28 @@
      "address": "부산광역시 기장군 기장읍 기장해안로 147",
      "lat": 35.192052,
      "lng": 129.212769
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224488359612": {
+   "category": "부산맛집(해운대이외)",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMjNfMjUg/MDAxNzk1NDA3ODU1NDc2.a_wYSJmCZq2ojFMwty39CTPVUGAPrU6sopBj-qsNjjwg.U6OV87sbF7q9zs3bSJUbbSwUDwepJMMhxz3SLOkMRYYg.JPEG/IMG%A3%DF2658.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "애프터눈티세트 부산의 5성 호텔 윈덤그랜드 부산, 온 더 클라우드",
+   "date": "2026-11-23",
+   "places": [
+    {
+     "name": "윈덤 그랜드 부산",
+     "address": "부산광역시 서구 등대로 27 윈덤 그랜드 부산",
+     "lat": 35.078484,
+     "lng": 129.024291
+    },
+    {
+     "name": "윈덤 그랜드 부산 온 더 클라우드",
+     "address": "부산광역시 서구 등대로 27 27층",
+     "lat": 35.078442,
+     "lng": 129.024248
     }
    ],
    "v": 2
