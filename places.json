@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2179,
+  "kgg8308": 2181,
   "sexpo15": 232
  },
  "posts": {
@@ -33184,7 +33184,7 @@
    "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMDVfMjAx/MDAxNzkxMTg1Nzc5NDMw.rEhCxpSo6bMgumlZjMUiKrIOfvn8F14IQTtFw52x1lEg.q6b0bgcNKdStos7AMFW5XKe6zeikx2OapDrHWLqWStYg.JPEG/IMG%A3%DF0558.jpg?type=s3",
    "blog": "kgg8308",
    "title": "롯데몰 동부산 노아스로스팅 커피 & 베이커리",
-   "date": "2026-10-05",
+   "date": "2026-10-06",
    "places": [
     {
      "name": "노아스로스팅 롯데백화점동부산점아울렛",
@@ -33200,7 +33200,7 @@
    "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMTBfMjkw/MDAxNzkxNTgzMjQyNTEy.1LRuGP3m4y_ExHS1_bZ34AEhUfWqIJPL4Hc54x-DXNUg.pI-OgZ3Nz3u4hRUn3M3EVO_4LsdqiNMwe3r9DjuI2F8g.JPEG/IMG%A3%DF0685.jpg?type=s3",
    "blog": "kgg8308",
    "title": "내돈내산 한남동 빠르크, 엄마의 레시피가 12년째 블루리본을 붙이는 법",
-   "date": "2026-10-09",
+   "date": "2026-10-10",
    "places": [
     {
      "name": "빠르크 한남본점",
@@ -33925,6 +33925,15 @@
    "places": [],
    "v": 2
   },
+  "https://blog.naver.com/kgg8308/224481334033": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMThfNjMg/MDAxNzk0OTM1NDk0NDAy.Bfvwa47IoMcr_11kgTBMpjbENiTATzCTaAg7lXMZ4Bsg.lbFRvlcwmZsjq4aL8tP6YaMVBuzoqeRcCl_O7jDBrWYg.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래창작촌 맛집 고트델리, 여관 자리를 바꾼 샌드위치 델리",
+   "date": "2026-11-25",
+   "places": [],
+   "v": 2
+  },
   "https://blog.naver.com/kgg8308/224483905812": {
    "category": "기타",
    "thumb": "https://blogthumb.pstatic.net/MjAyNjExMTlfMTQ0/MDAxNzk1MDkxMzM3MzY3.7XJCXUjflbkFrDeHNnYYintQ9BTnVDc26gCGVZ8LaEkg.IZenk3WYqjWFDBIOAw-7fTkEDz3MFTgfQxpf9xMk-2Ug.PNG/image.png?type=s3",
@@ -33968,6 +33977,22 @@
      "address": "부산광역시 서구 등대로 27 27층",
      "lat": 35.078442,
      "lng": 129.024248
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224491449679": {
+   "category": "해운대맛집!!",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjEwMjdfMTg4/MDAxNzkzMDkwMTc0OTY1.i2flYlAybTsKDkcqTw-D5_5z4bRba629AUcwcMyeWjUg.R20HxZFSEq_WuS7kYCPCrw6gKt0JZG5UOFIM_P8WhHIg.JPEG/IMG%A3%DF1116.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "거대 돼지 국밥, 부산 미슐랭 2027년의 위엄",
+   "date": "2026-11-25",
+   "places": [
+    {
+     "name": "거대돼지국밥",
+     "address": "부산광역시 해운대구 달맞이길 16-2",
+     "lat": 35.16197,
+     "lng": 129.166497
     }
    ],
    "v": 2
