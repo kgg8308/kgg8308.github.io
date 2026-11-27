@@ -1,6 +1,6 @@
 {
  "lists": {
-  "kgg8308": 2184,
+  "kgg8308": 2186,
   "sexpo15": 232
  },
  "posts": {
@@ -33970,6 +33970,15 @@
    "places": [],
    "v": 2
   },
+  "https://blog.naver.com/kgg8308/224481341169": {
+   "category": "문래창작촌 맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMThfMTc1/MDAxNzk0OTM2NDk1OTg1.e1vK1vqgrA_eRFSFzYS-AM7LMQsESbZAnaH8tZau9RMg.RWGuy5SDxYcXR2_AFzNJ0CLhRrARj_dHE4xkEs4W_ecg.JPEG/00_%B4%EB%C7%A5%BB%E7%C1%F8.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "문래 펍 비어바나 서울, 문래동 수제맥주의 터줏대감",
+   "date": "2026-11-27",
+   "places": [],
+   "v": 2
+  },
   "https://blog.naver.com/kgg8308/224483905812": {
    "category": "기타",
    "thumb": "https://blogthumb.pstatic.net/MjAyNjExMTlfMTQ0/MDAxNzk1MDkxMzM3MzY3.7XJCXUjflbkFrDeHNnYYintQ9BTnVDc26gCGVZ8LaEkg.IZenk3WYqjWFDBIOAw-7fTkEDz3MFTgfQxpf9xMk-2Ug.PNG/image.png?type=s3",
@@ -34013,6 +34022,40 @@
      "address": "부산광역시 서구 등대로 27 27층",
      "lat": 35.078442,
      "lng": 129.024248
+    }
+   ],
+   "v": 2
+  },
+  "https://blog.naver.com/kgg8308/224488472100": {
+   "category": "해운대맛집",
+   "thumb": "https://blogthumb.pstatic.net/MjAyNjExMjNfMjYw/MDAxNzk1NDExMzYwMTE1.8a-DM38ATrSPqe1c-LTspe74KhWmCBckfUiryhfY6_8g.DCby6PRbyQ8u6GwcV695naMy-2il27Qy5Mb4PN59nPog.JPEG/IMG%A3%DF2598.jpg?type=s3",
+   "blog": "kgg8308",
+   "title": "부산 청사포와 27년 미슐랭 빕그루망 부산 거대국밥",
+   "date": "2026-11-27",
+   "places": [
+    {
+     "name": "청사포",
+     "address": "부산광역시 해운대구 중1동",
+     "lat": 35.160413,
+     "lng": 129.192412
+    },
+    {
+     "name": "청사포방파제",
+     "address": "부산광역시 해운대구 송정동",
+     "lat": 35.159193,
+     "lng": 129.190437
+    },
+    {
+     "name": "하진이네",
+     "address": "부산광역시 해운대구 청사포로 151 1.2층",
+     "lat": 35.162084,
+     "lng": 129.19402
+    },
+    {
+     "name": "수민이네",
+     "address": "부산광역시 해운대구 청사포로58번길 118",
+     "lat": 35.160664,
+     "lng": 129.19088
     }
    ],
    "v": 2

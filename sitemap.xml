@@ -8,13 +8,13 @@
   </url>
   <url>
     <loc>https://kgg8308.github.io/region/</loc>
-    <lastmod>2026-11-25</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kgg8308.github.io/region/%EB%B6%80%EC%82%B0-%ED%95%B4%EC%9A%B4%EB%8C%80%EA%B5%AC/</loc>
-    <lastmod>2026-11-25</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -455,6 +455,30 @@
     <lastmod>2023-03-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kgg8308.github.io/place/%EC%B2%AD%EC%82%AC%ED%8F%AC-c575/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kgg8308.github.io/place/%EC%B2%AD%EC%82%AC%ED%8F%AC%EB%B0%A9%ED%8C%8C%EC%A0%9C-0368/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kgg8308.github.io/place/%ED%95%98%EC%A7%84%EC%9D%B4%EB%84%A4-0f10/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kgg8308.github.io/place/%EC%88%98%EB%AF%BC%EC%9D%B4%EB%84%A4-781e/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://kgg8308.github.io/place/%EA%B1%B0%EB%8C%80%EB%8F%BC%EC%A7%80%EA%B5%AD%EB%B0%A5-7dbd/</loc>
@@ -8331,12 +8355,6 @@
   <url>
     <loc>https://kgg8308.github.io/place/%EC%86%8C%EC%84%A4%ED%95%9C%EB%82%A8-429b/</loc>
     <lastmod>2022-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://kgg8308.github.io/place/%ED%95%98%EC%A7%84%EC%9D%B4%EB%84%A4-0f10/</loc>
-    <lastmod>2022-06-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
